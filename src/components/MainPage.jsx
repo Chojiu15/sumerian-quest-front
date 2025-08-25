@@ -145,6 +145,7 @@ export default function SumerianTerminal() {
   const [currentAudio, setCurrentAudio] = useState(null)
   const [apiStatus, setApiStatus] = useState("CONNECTED")
   const [isAmbientPlaying, setIsAmbientPlaying] = useState(false)
+  const [isAmbientLoaded, setIsAmbientLoaded] = useState(false)
 
   const [lastWhisperDate, setLastWhisperDate] = useState(() => {
     if (typeof window !== "undefined") {
@@ -204,15 +205,8 @@ Ask, if you dare, but know that each question opens doors sealed for good reason
       audio.preload = "auto"
       audio.volume = 0.4
       whispersAudioRef.current = audio
-
-      const ambientAudio = new Audio("/audio/ambiance.mp3") // Fixed ambient music file path from ambient.mp3 to ambiance.mp3
-      ambientAudio.preload = "auto"
-      ambientAudio.volume = 0.2
-      ambientAudio.loop = true
-      ambientMusicRef.current = ambientAudio
     } catch (error) {
       whispersAudioRef.current = null
-      ambientMusicRef.current = null
     }
   }
 
@@ -704,7 +698,33 @@ ${userMessage} - THE WORD OF POWER ECHOES THROUGH ETERNITY ${userMessage}`,
     playFallbackSound("command")
   }
 
-  const toggleAmbientMusic = () => {
+  const loadAmbientMusic = async () => {
+    if (isAmbientLoaded || ambientMusicRef.current) return
+
+    try {
+      const ambientAudio = new Audio("/audio/ambiance.mp4")
+      ambientAudio.volume = 0.2
+      ambientAudio.loop = true
+      ambientMusicRef.current = ambientAudio
+      setIsAmbientLoaded(true)
+
+      // Auto-play after loading
+      await ambientAudio.play()
+      setIsAmbientPlaying(true)
+    } catch (error) {
+      console.error("Error loading ambient music:", error)
+      ambientMusicRef.current = null
+      setIsAmbientLoaded(false)
+    }
+  }
+
+  const toggleAmbientMusic = async () => {
+    // Load music on first click
+    if (!isAmbientLoaded) {
+      await loadAmbientMusic()
+      return
+    }
+
     if (!ambientMusicRef.current) return
 
     try {
@@ -803,7 +823,7 @@ ${userMessage} - THE WORD OF POWER ECHOES THROUGH ETERNITY ${userMessage}`,
   return (
     <div className="min-h-screen bg-gradient-to-b from-stone-900 to-stone-950 text-amber-100 font-mono relative">
       {/* Left Fire Vase */}
-      <div className="fixed left-32 top-20 z-10 pointer-events-none hidden xl:block">
+      <div className="fixed left-22 top-20 z-10 pointer-events-none hidden xl:block">
         <div className="relative w-40 h-60">
           <img
             src="/images/vase-base.png"
@@ -823,7 +843,7 @@ ${userMessage} - THE WORD OF POWER ECHOES THROUGH ETERNITY ${userMessage}`,
         </div>
       </div>
 
-      <div className="fixed right-32 top-20 z-10 pointer-events-none hidden xl:block">
+      <div className="fixed right-22 top-20 z-10 pointer-events-none hidden xl:block">
         <div className="relative w-40 h-60">
           <img
             src="/images/vase-base.png"
@@ -867,10 +887,14 @@ ${userMessage} - THE WORD OF POWER ECHOES THROUGH ETERNITY ${userMessage}`,
                   ? "border-amber-400 bg-amber-400/20 text-amber-400 shadow-lg shadow-amber-400/30"
                   : "border-stone-600 bg-stone-800/50 text-stone-400 hover:border-amber-600 hover:text-amber-300"
               }`}
-              title={isAmbientPlaying ? "Stop Ambient Music" : "Play Ambient Music"}
+              title={
+                isAmbientPlaying ? "Stop Ambient Music" : !isAmbientLoaded ? "Load Ambient Music" : "Play Ambient Music"
+              }
             >
               <div className="text-2xl">{isAmbientPlaying ? "𒌋𒌋𒌋" : "𒀀𒈾𒀀"}</div>
-              <div className="text-xs mt-1 font-mono tracking-wider">{isAmbientPlaying ? "SILENCE" : "AMBIENCE"}</div>
+              <div className="text-xs mt-1 font-mono tracking-wider">
+                {!isAmbientLoaded ? "LOAD" : isAmbientPlaying ? "SILENCE" : "AMBIENCE"}
+              </div>
             </button>
           </div>
         </header>
@@ -1049,14 +1073,6 @@ ${userMessage} - THE WORD OF POWER ECHOES THROUGH ETERNITY ${userMessage}`,
         <div className="mt-8 text-center text-xs text-stone-500">
           <div className="mb-2">"In the depths of the void, only the worthy shall inherit the digital realm"</div>
           <div className="flex justify-center space-x-4">
-            {/* <a
-              href="https://t.me/SumeriaSol"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-amber-400 cursor-pointer transition-colors"
-            >
-              𒀭 Telegram
-            </a> */}
             <a
               href="https://x.com/SumeriaSol"
               target="_blank"
@@ -1065,14 +1081,6 @@ ${userMessage} - THE WORD OF POWER ECHOES THROUGH ETERNITY ${userMessage}`,
             >
               𒌷 Twitter
             </a>
-            {/* <a
-              href="https://discord.gg/SumeriaSol"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-red-400 cursor-pointer transition-colors"
-            >
-              ⚡ Discord
-            </a> */}
           </div>
         </div>
       </div>
