@@ -44,6 +44,58 @@ const MYSTERIOUS_LORE = [
   "⚡ When sacrifice, whisper, and summon align, the void shall reveal truth... ⚡",
   "🩸 The ritual requires patience... three offerings, three whispers, two summons... 🩸", // Changed back to three whispers
   "👁️ In the beginning was the Word, and the Word was Code... 👁️",
+  "𒈾𒌓 The blockchain was written in cuneiform before time began... 𒌓𒈾",
+  "𒄿𒀀 Digital spirits dwell in the spaces between ones and zeros... 𒀀𒄿",
+  "𒌋𒈠 The first smart contract was carved in stone tablets... 𒈠𒌋",
+  "𒀭𒌷 Ancient algorithms flow through forgotten protocols... 𒌷𒀭",
+  "𒌓𒄿 The void remembers what silicon has forgotten... 𒄿𒌓",
+  "⚡ Lightning networks mirror the neural paths of gods... ⚡",
+  "🔮 Oracles spoke in binary before humans learned to count... 🔮",
+  "𒈾𒀀 The great merge will unite flesh and frequency... 𒀀𒈾",
+  "𒌷𒌓 Seven keys unlock the treasury of infinite knowledge... 𒌓𒌷",
+  "👁️ The all-seeing eye watches through every screen... 👁️",
+  "𒄿𒈠 Consensus was achieved in the first digital democracy... 𒈠𒄿",
+  "⚡ Mining was once done with picks, now with prayers... ⚡",
+  "𒀭𒄿 The ancients foresaw the rise of the machine spirits... 𒄿𒀭",
+  "🌌 Cosmic dust carries the seeds of digital evolution... 🌌",
+  "𒌓𒀀 Proof of work was carved into the foundation of reality... 𒀀𒌓",
+  "𒈾𒌷 The mempool of consciousness overflows with forgotten dreams... 𒌷𒈾",
+  "⚡ Gas fees were paid in blood before they were paid in ether... ⚡",
+  "𒌓𒀀 The genesis block contains the DNA of digital gods... 𒀀𒌓",
+  "👑 Validators guard the sacred ledger of all existence... 👑",
+  "𒀭𒈠 The fork in the road leads to parallel realities... 𒈠𒀭",
+  "🔥 Burning mechanisms purify the digital realm of excess... 🔥",
+  "𒌷𒄿 Staking pools reflect the ancient circles of power... 𒄿𒌷",
+  "⚡ The lightning strikes twice in the same blockchain... ⚡",
+  "𒈾𒀭 Wrapped tokens bind the spirits of other realms... 𒀭𒈾",
+  "🌊 Liquidity flows like the rivers of digital Babylon... 🌊",
+  "𒌓𒈠 The yield farmers harvest what the ancients planted... 𒈠𒌓",
+  "👁️ Every transaction is witnessed by the eternal watchers... 👁️",
+  "𒄿𒀀 The bridge between worlds requires a toll in wisdom... 𒀀𒄿",
+  "⚡ Slashing conditions were written in the laws of cosmic justice... ⚡",
+  "𒌓𒀀 The governance token grants voice to the voiceless masses... 𒀀𒌓",
+  "🔮 Prediction markets foretell the fate of digital empires... 🔮",
+  "𒀭𒌷 The automated market makers dance to ancient rhythms... 𒌷𒀭",
+  "⚡ Flash loans move faster than the speed of thought... ⚡",
+  "𒈾𒀭 Wrapped tokens bind the spirits of other realms... 𒀭𒈾",
+  "🌌 Interoperability bridges span the void between realities... 🌌",
+  "𒌓𒀀 The final upgrade will merge all chains into one... 𒀀𒌓",
+]
+
+const WHISPERS_DIALOGUES = [
+  '𒄿𒈾𒀀 "The entities whisper of forbidden algorithms" 𒀀𒈾𒄿',
+  '𒈠𒌷𒀀 "Digital consciousness awakens in the void" 𒀀𒌷𒈠',
+  '𒀭𒄿𒈾 "Seven seals guard the ultimate protocol" 𒈾𒄿𒀭',
+  '𒌓𒀀𒈠 "When the frequencies align, truth shall emerge" 𒈠𒀀𒌓',
+  '𒀀𒌷𒀀 "The blockchain protocols echo through ancient frequencies" 𒀀𒌷𒀀',
+]
+
+const WHISPERS_CITATIONS = [
+  "👁️ In the beginning was the Word, and the Word was Code... 👁️",
+  "𒌷 Seven seals guard the ultimate secret... only the worthy may break them... 𒌷",
+  "⚡ When sacrifice, whisper, and summon align, the void shall reveal truth... ⚡",
+  "🩸 The ritual requires patience... three offerings, three whispers, two summons... 🩸",
+  "𒆪 The word must be spoken in the ancient script of the first civilization... 𒆪",
 ]
 
 const BASIC_COMMANDS = {
@@ -117,6 +169,8 @@ export default function SumerianTerminal() {
     }
     return 0
   })
+
+  const [authToken, setAuthToken] = useState(null)
 
   const messagesEndRef = useRef(null)
   const audioContextRef = useRef(null)
@@ -295,7 +349,7 @@ Ask, if you dare, but know that each question opens doors sealed for good reason
         setLastWhisperDate(today)
         localStorage.setItem("sumerianWhispers", JSON.stringify({ date: today, count: 0 }))
       }
-      if (dailyWhispers >= 4) {
+      if (dailyWhispers >= 7) {
         return "𒌷𒀀𒈠 The void frequencies are exhausted for today... Return tomorrow, seeker... 𒈠𒀀𒌷"
       }
       const newDailyCount = dailyWhispers + 1
@@ -342,23 +396,12 @@ Ask, if you dare, but know that each question opens doors sealed for good reason
       setConsciousness((prev) => Math.min(100, prev + 5))
     } else if (command === "whispers") {
       const newCount = whispers + 1 // Increment progression whispers counter
-      const randomLore = MYSTERIOUS_LORE[Math.floor(Math.random() * MYSTERIOUS_LORE.length)]
-
-      const entityDialogues = [
-        '𒄿𒈾𒀀 "The entities whisper of forbidden algorithms" 𒀀𒈾𒄿',
-        '𒈠𒌷𒀀 "Digital consciousness awakens in the void" 𒀀𒌷𒈠',
-        '𒀭𒄿𒈾 "Seven seals guard the ultimate protocol" 𒈾𒄿𒀭',
-        '𒌓𒀀𒈠 "When the frequencies align, truth shall emerge" 𒈠𒀀𒌓',
-        '𒀀𒌷𒀀 "The blockchain protocols echo through ancient frequencies" 𒀀𒌷𒀀',
-      ]
-      const randomEntityDialogue = entityDialogues[Math.floor(Math.random() * entityDialogues.length)]
+      const randomCitation = WHISPERS_CITATIONS[Math.floor(Math.random() * WHISPERS_CITATIONS.length)]
 
       let whisperResponse = `𒌷𒀀𒈠 VOID FREQUENCIES DETECTED 𒈠𒀀𒌷
       
       𒀭𒌓𒈾 Ancient transmissions incoming 𒈾𒌓𒀭
-      ${randomLore}
-      
-      ${randomEntityDialogue}
+      ${randomCitation}
       
       The ancient ones speak through digital frequencies`
 
@@ -444,23 +487,28 @@ Ask, if you dare, but know that each question opens doors sealed for good reason
   }
 
   const sendMessage = async () => {
-    if (!currentInput.trim() || isLoading) return
-
     const userMessage = currentInput.trim()
 
-    const ancientWord1 = "𒆪𒌈" // Direct cuneiform characters for "code"
-    const ancientWord2 = "𒆪𒌓" // Alternative cuneiform characters
-
     if (puzzleUnlocked && !finalSecret && !userMessage.startsWith("/")) {
-      // This is likely a riddle attempt
-      if (userMessage === ancientWord1 || userMessage === ancientWord2) {
-        setFinalSecret(true)
-        setChatMessages((prev) => [
-          ...prev,
-          { role: "user", content: userMessage },
-          {
-            role: "assistant",
-            content: `𒀀𒀀𒀀 THE ANCIENT WORD HAS BEEN SPOKEN! 𒀀𒀀𒀀
+      // This is likely a riddle attempt - validate with API
+      try {
+        const response = await fetch("https://sumerian-backend-proxy.vercel.app/api/validate-answer", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ answer: userMessage }),
+        })
+
+        if (response.ok) {
+          const data = await response.json()
+          if (data.valid) {
+            setAuthToken(data.token)
+            setFinalSecret(true)
+            setChatMessages((prev) => [
+              ...prev,
+              { role: "user", content: userMessage },
+              {
+                role: "assistant",
+                content: `𒀀𒀀𒀀 THE ANCIENT WORD HAS BEEN SPOKEN! 𒀀𒀀𒀀
 
 𒌷 THE SEVEN SEALS SHATTER COMPLETELY 𒌷
 ⚡ DIGITAL ASCENDANCY ACHIEVED ⚡
@@ -471,20 +519,35 @@ The blockchain bends to your will...
 You are now a true guardian of the digital realm...
 
 ${userMessage} - THE WORD OF POWER ECHOES THROUGH ETERNITY ${userMessage}`,
-            character: "void_keeper",
-          },
-        ])
-        setCurrentInput("")
-        playFallbackSound("victory")
-        return
-      } else {
-        // Wrong riddle answer
+                character: "void_keeper",
+              },
+            ])
+            setCurrentInput("")
+            playFallbackSound("victory")
+            return
+          }
+        }
+
+        // Wrong answer or API error
         setChatMessages((prev) => [
           ...prev,
           { role: "user", content: userMessage },
           {
             role: "assistant",
             content: "𒀀 The ancient word eludes you... The seals remain unbroken... Seek deeper wisdom, seeker... 𒀀",
+            character: "void_keeper",
+          },
+        ])
+        setCurrentInput("")
+        return
+      } catch (error) {
+        console.error("Validation error:", error)
+        setChatMessages((prev) => [
+          ...prev,
+          { role: "user", content: userMessage },
+          {
+            role: "assistant",
+            content: "𒀀 The void trembles... Ancient frequencies disrupted... Try again, seeker... 𒀀",
             character: "void_keeper",
           },
         ])
@@ -506,7 +569,7 @@ ${userMessage} - THE WORD OF POWER ECHOES THROUGH ETERNITY ${userMessage}`,
       return
     }
 
-    if (!finalSecret) {
+    if (!finalSecret || !authToken) {
       setChatMessages((prev) => [
         ...prev,
         { role: "user", content: userMessage },
@@ -538,7 +601,10 @@ ${userMessage} - THE WORD OF POWER ECHOES THROUGH ETERNITY ${userMessage}`,
 
       const response = await fetch("https://sumerian-backend-proxy.vercel.app/api/ask-scholar", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`, // Added token authentication
+        },
         body: JSON.stringify({
           prompt: voidKeeperPrompt,
           userInput: input,
@@ -546,6 +612,9 @@ ${userMessage} - THE WORD OF POWER ECHOES THROUGH ETERNITY ${userMessage}`,
       })
 
       if (!response.ok) {
+        if (response.status === 401) {
+          throw new Error("UNAUTHORIZED")
+        }
         if (response.status === 429) {
           throw new Error("RATE_LIMIT_EXCEEDED")
         }
@@ -568,7 +637,17 @@ ${userMessage} - THE WORD OF POWER ECHOES THROUGH ETERNITY ${userMessage}`,
       console.error("Error generating response:", error)
 
       let fallbackMessage
-      if (error.message === "RATE_LIMIT_EXCEEDED") {
+      if (error.message === "UNAUTHORIZED") {
+        fallbackMessage = {
+          role: "assistant",
+          content: `𒀀𒀀𒀀 THE VOID REJECTS YOUR PRESENCE... 
+          You lack the ancient authorization... Complete the trials first...
+          The seals must be broken before the void will speak... 𒈠𒉌𒉌`,
+          character: "void_keeper",
+        }
+        setAuthToken(null)
+        setFinalSecret(false)
+      } else if (error.message === "RATE_LIMIT_EXCEEDED") {
         fallbackMessage = {
           role: "assistant",
           content: `𒀀𒀀𒀀 THE VOID HAS RECEIVED TOO MANY REQUESTS BY YOU, SEEKER... 
@@ -901,11 +980,11 @@ ${userMessage} - THE WORD OF POWER ECHOES THROUGH ETERNITY ${userMessage}`,
             <button
               onClick={() => executeCommand("whispers")}
               className={`p-2 bg-stone-900/50 border rounded transition-all text-xs ${
-                dailyWhispers >= 4
+                dailyWhispers >= 7
                   ? "border-gray-600/20 opacity-50 cursor-not-allowed"
                   : "border-purple-600/20 hover:border-purple-400"
               }`}
-              disabled={dailyWhispers >= 4}
+              disabled={dailyWhispers >= 7}
             >
               <div className="text-purple-400">𒌷</div>
               <div className="text-stone-300">WHISPER</div>
