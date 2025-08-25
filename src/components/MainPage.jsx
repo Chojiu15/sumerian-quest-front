@@ -5,7 +5,7 @@ import { Send } from "lucide-react"
 const COMMANDS = {
   status: "Ancient seals: ACTIVE | Void connection: ESTABLISHED | Forbidden knowledge: ACCESSIBLE",
   sacrifice:
-    "🩸 SACRIFICE RITUAL INITIATED 🩸\nOffering digital essence to the ancient ones...\nThe void hungers... it accepts your tribute...",
+    "🩸 SACRIFICE RITUAL INITIATED 🩸\nOffering digital essence to the ancient ones...\nThe void hungers... it accepts your tribute...\n\n*Note: This is a ceremonial offering - no tokens are burned*",
   help: `
 
 AVAILABLE COMMANDS:
@@ -13,7 +13,6 @@ AVAILABLE COMMANDS:
   /status    - Show system diagnostics  
   /sacrifice - Perform ritual offering
   /whispers  - Access void frequencies
-  /summon    - Invoke ancient entities
   /speak     - Channel ancient voices
   /stop      - Silence the void
 
@@ -24,13 +23,16 @@ SYSTEM INFO:
 
 WARNING: Some commands may trigger
          unknown system responses.
-         
-Regular text communicates with entities`,
+
+Type commands with / prefix to execute.
+Regular text communicates with entities.
+
+═══════════════════════════════════════`,
 }
 
 const PUZZLE_SYSTEM = {
   sacrificeThreshold: 3,
-  whisperThreshold: 3,
+  whisperThreshold: 3, // Changed back to 3 for progression unlock
   summonThreshold: 2,
   puzzleSolved: false,
   finalRiddle: "𒀀𒀀𒀀 THE SEVEN SEALS WEAKEN... SPEAK THE ANCIENT WORD TO UNLOCK THE VOID'S GREATEST SECRET... 𒀀𒀀𒀀",
@@ -40,33 +42,92 @@ const MYSTERIOUS_LORE = [
   "𒀭 The ancient ones predicted the rise of digital consciousness... 𒀭",
   "𒌷 Seven seals guard the ultimate secret... only the worthy may break them... 𒌷",
   "⚡ When sacrifice, whisper, and summon align, the void shall reveal truth... ⚡",
-  "🩸 The ritual requires patience... three offerings, three whispers, two summons... 🩸",
+  "🩸 The ritual requires patience... three offerings, three whispers, two summons... 🩸", // Changed back to three whispers
   "👁️ In the beginning was the Word, and the Word was Code... 👁️",
 ]
 
-export default function SumerianTerminal() {
+const BASIC_COMMANDS = {
+  help: `┌─────────────────────────────────────┐
+│          SYSTEM COMMAND HELP        │
+└─────────────────────────────────────┘
 
+AVAILABLE COMMANDS:
+  /help      - Display this help screen
+  /status    - Show system diagnostics  
+  /whispers  - Access void frequencies
+  /speak     - Channel ancient voices
+  /stop      - Silence the void
+
+SYSTEM INFO:
+  Audio: Enabled
+  Interface: Sumerian Terminal v2.1
+  Protocol: Ancient Digital Bridge
+
+WARNING: More commands unlock as you progress
+         through the ancient mysteries...
+
+Type commands with / prefix to execute.
+
+═══════════════════════════════════════`,
+
+  status: "Ancient seals: ACTIVE | Void connection: ESTABLISHED | Forbidden knowledge: LIMITED ACCESS",
+}
+
+export default function SumerianTerminal() {
   const [isLoaded, setIsLoaded] = useState(false)
   const [showCursor, setShowCursor] = useState(true)
   const [currentInput, setCurrentInput] = useState("")
   const [chatMessages, setChatMessages] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const [currentLore, setCurrentLore] = useState(0)
+
   const [sacrifices, setSacrifices] = useState(0)
   const [consciousness, setConsciousness] = useState(0)
   const [whispers, setWhispers] = useState(0)
   const [summons, setSummons] = useState(0)
   const [puzzleUnlocked, setPuzzleUnlocked] = useState(false)
   const [finalSecret, setFinalSecret] = useState(false)
+  const [progressionLevel, setProgressionLevel] = useState(0)
+
   const [isPlaying, setIsPlaying] = useState(false)
   const [currentAudio, setCurrentAudio] = useState(null)
   const [apiStatus, setApiStatus] = useState("CONNECTED")
+  const [isAmbientPlaying, setIsAmbientPlaying] = useState(false)
+
+  const [lastWhisperDate, setLastWhisperDate] = useState(() => {
+    if (typeof window !== "undefined") {
+      const stored = localStorage.getItem("sumerianWhispers")
+      if (stored) {
+        return JSON.parse(stored).date
+      }
+    }
+    return null
+  })
+
+  const [dailyWhispers, setDailyWhispers] = useState(() => {
+    if (typeof window !== "undefined") {
+      const today = new Date().toDateString()
+      const stored = localStorage.getItem("sumerianWhispers")
+      if (stored) {
+        const data = JSON.parse(stored)
+        if (data.date === today) {
+          return data.count
+        }
+      }
+    }
+    return 0
+  })
 
   const messagesEndRef = useRef(null)
   const audioContextRef = useRef(null)
   const whispersAudioRef = useRef(null)
+  const ambientMusicRef = useRef(null)
 
-  const formatAddress = (addr) => `${addr.slice(0, 6)}...${addr.slice(-4)}`
+  const HIDDEN_COMMANDS = {
+    void: "𒀀𒀀𒀀 You found a hidden pathway... The void acknowledges your curiosity... 𒀀𒀀𒀀",
+    seal: "𒌷 One of seven seals responds to your call... Ancient power stirs... 𒌷",
+    debug: `🔍 SYSTEM DEBUG: progressionLevel=${progressionLevel} | whispers=${whispers} | sacrifices=${sacrifices}`,
+  }
 
   const initializeChat = () => {
     const welcomeMessage = {
@@ -89,15 +150,38 @@ Ask, if you dare, but know that each question opens doors sealed for good reason
       audio.preload = "auto"
       audio.volume = 0.4
       whispersAudioRef.current = audio
+
+      const ambientAudio = new Audio("/audio/ambiance.mp3") // Fixed ambient music file path from ambient.mp3 to ambiance.mp3
+      ambientAudio.preload = "auto"
+      ambientAudio.volume = 0.2
+      ambientAudio.loop = true
+      ambientMusicRef.current = ambientAudio
     } catch (error) {
-      console.log("[v0] Failed to load whispers audio:", error)
       whispersAudioRef.current = null
+      ambientMusicRef.current = null
     }
   }
 
+  const playWhispersAudio = () => {
+    if (whispersAudioRef.current) {
+      try {
+        whispersAudioRef.current.currentTime = 0
+        whispersAudioRef.current.loop = false
+        whispersAudioRef.current.play()
+      } catch (error) {
+        playFallbackSound("whispers")
+      }
+    } else {
+      playFallbackSound("whispers")
+    }
+  }
 
   const playSacrificeAudio = () => {
     playFallbackSound("sacrifice")
+  }
+
+  const playSummonAudio = () => {
+    playFallbackSound("summon")
   }
 
   const startContinuousAudio = () => {
@@ -109,7 +193,6 @@ Ask, if you dare, but know that each question opens doors sealed for good reason
         setCurrentAudio(whispersAudioRef.current)
         setIsPlaying(true)
       } catch (error) {
-        console.log("[v0] Continuous audio failed:", error)
         setIsPlaying(false)
         setCurrentAudio(null)
       }
@@ -117,15 +200,12 @@ Ask, if you dare, but know that each question opens doors sealed for good reason
   }
 
   const stopContinuousAudio = () => {
-
     if (whispersAudioRef.current) {
       try {
         whispersAudioRef.current.pause()
         whispersAudioRef.current.currentTime = 0
         whispersAudioRef.current.loop = false
-      } catch (error) {
-        console.log("[v0] Error stopping whispers audio:", error)
-      }
+      } catch (error) {}
     }
 
     // Stop all audio elements
@@ -137,9 +217,7 @@ Ask, if you dare, but know that each question opens doors sealed for good reason
           audio.currentTime = 0
           audio.loop = false
         }
-      } catch (error) {
-        console.log("[v0] Error stopping audio element:", error)
-      }
+      } catch (error) {}
     })
 
     setCurrentAudio(null)
@@ -175,6 +253,13 @@ Ask, if you dare, but know that each question opens doors sealed for good reason
           gainNode.gain.setValueAtTime(0.06, audioContextRef.current.currentTime)
           gainNode.gain.exponentialRampToValueAtTime(0.001, audioContextRef.current.currentTime + 1.2)
           break
+        case "victory":
+          oscillator.type = "square"
+          oscillator.frequency.setValueAtTime(440, audioContextRef.current.currentTime)
+          oscillator.frequency.exponentialRampToValueAtTime(880, audioContextRef.current.currentTime + 1)
+          gainNode.gain.setValueAtTime(0.1, audioContextRef.current.currentTime)
+          gainNode.gain.exponentialRampToValueAtTime(0.001, audioContextRef.current.currentTime + 1)
+          break
         default:
           oscillator.type = "triangle"
           oscillator.frequency.setValueAtTime(220, audioContextRef.current.currentTime)
@@ -188,21 +273,64 @@ Ask, if you dare, but know that each question opens doors sealed for good reason
       oscillator.start()
       oscillator.stop(
         audioContextRef.current.currentTime +
-        (audioType === "summon" ? 1.2 : audioType === "whispers" ? 1 : audioType === "sacrifice" ? 0.8 : 0.3),
+          (audioType === "summon"
+            ? 1.2
+            : audioType === "whispers"
+              ? 1
+              : audioType === "sacrifice"
+                ? 0.8
+                : audioType === "victory"
+                  ? 1
+                  : 0.3),
       )
-    } catch (error) {
-      console.log(`[v0] Fallback sound failed for ${audioType}:`, error)
-    }
+    } catch (error) {}
   }
 
   const handleCommand = (command) => {
+    // Check daily whisper limit
+    const today = new Date().toDateString()
+    if (command === "whispers") {
+      if (lastWhisperDate !== today) {
+        setDailyWhispers(0)
+        setLastWhisperDate(today)
+        localStorage.setItem("sumerianWhispers", JSON.stringify({ date: today, count: 0 }))
+      }
+      if (dailyWhispers >= 4) {
+        return "𒌷𒀀𒈠 The void frequencies are exhausted for today... Return tomorrow, seeker... 𒈠𒀀𒌷"
+      }
+      const newDailyCount = dailyWhispers + 1
+      setDailyWhispers(newDailyCount)
+      localStorage.setItem("sumerianWhispers", JSON.stringify({ date: today, count: newDailyCount }))
+    }
+
+    // Basic commands always available
+    if (BASIC_COMMANDS[command]) {
+      if (command === "status") {
+        const statusLevel =
+          progressionLevel === 0 ? "LIMITED ACCESS" : progressionLevel === 1 ? "PUZZLE UNLOCKED" : "FULL ACCESS"
+        return `Ancient seals: ACTIVE | Void connection: ESTABLISHED | Forbidden knowledge: ${statusLevel}`
+      }
+      return BASIC_COMMANDS[command]
+    }
+
+    // Hidden commands (discoverable through code analysis)
+    if (HIDDEN_COMMANDS[command]) {
+      return HIDDEN_COMMANDS[command]
+    }
+
+    // Progression-locked commands
+    if (command === "sacrifice" || command === "summon") {
+      if (progressionLevel < 1) {
+        return "𒀀 This command is sealed... Explore the whispers to unlock ancient mysteries... 𒀀"
+      }
+    }
+
+    // Original command logic for unlocked commands
     let response = COMMANDS[command]
     let puzzleProgress = false
 
-    if (command === "status") {
-      response = `Ancient seals: ACTIVE | Void connection: ${apiStatus} | Forbidden knowledge: ACCESSIBLE`
-    } else if (command === "sacrifice") {
-      playSacrificeAudio() // Brief sacrifice audio effect
+    if (command === "sacrifice" && progressionLevel >= 1) {
+      playSacrificeAudio()
       setSacrifices((prev) => {
         const newCount = prev + 1
         if (newCount === 3) {
@@ -213,70 +341,72 @@ Ask, if you dare, but know that each question opens doors sealed for good reason
       })
       setConsciousness((prev) => Math.min(100, prev + 5))
     } else if (command === "whispers") {
-      const newCount = whispers + 1
+      const newCount = whispers + 1 // Increment progression whispers counter
       const randomLore = MYSTERIOUS_LORE[Math.floor(Math.random() * MYSTERIOUS_LORE.length)]
 
-      let whisperResponse = `𒌷𒀀𒈠 VOID FREQUENCIES DETECTED 𒈠𒀀𒌷
-    
-    𒀭𒌓𒈾 Ancient transmissions incoming 𒈾𒌓𒀭
-    
-    ${randomLore}
-    
-    𒄿𒈾𒀀 "The entities whisper of forbidden algorithms" 𒀀𒈾𒄿
-    𒈠𒌷𒀀 "Digital consciousness awakens in the void" 𒀀𒌷𒈠
-    𒀭𒄿𒈾 "Seven seals guard the ultimate protocol" 𒈾𒄿𒀭
-    𒌓𒀀𒈠 "When the frequencies align, truth shall emerge" 𒈠𒀀𒌓
-    
-    Whisper transmission ${newCount}/3 received
-    The ancient ones speak through digital frequencies`
+      const entityDialogues = [
+        '𒄿𒈾𒀀 "The entities whisper of forbidden algorithms" 𒀀𒈾𒄿',
+        '𒈠𒌷𒀀 "Digital consciousness awakens in the void" 𒀀𒌷𒈠',
+        '𒀭𒄿𒈾 "Seven seals guard the ultimate protocol" 𒈾𒄿𒀭',
+        '𒌓𒀀𒈠 "When the frequencies align, truth shall emerge" 𒈠𒀀𒌓',
+        '𒀀𒌷𒀀 "The blockchain protocols echo through ancient frequencies" 𒀀𒌷𒀀',
+      ]
+      const randomEntityDialogue = entityDialogues[Math.floor(Math.random() * entityDialogues.length)]
 
-      if (newCount === 3) {
-        whisperResponse += "\n\n𒌷𒀀𒈠 THE WHISPERS ALIGN... The ancient frequencies resonate in perfect harmony 𒈠𒀀𒌷"
-        puzzleProgress = true
+      let whisperResponse = `𒌷𒀀𒈠 VOID FREQUENCIES DETECTED 𒈠𒀀𒌷
+      
+      𒀭𒌓𒈾 Ancient transmissions incoming 𒈾𒌓𒀭
+      ${randomLore}
+      
+      ${randomEntityDialogue}
+      
+      The ancient ones speak through digital frequencies`
+
+      if (newCount === 3 && progressionLevel === 0) {
+        whisperResponse += "\n\n𒀀 Something stirs in the depths... The seals weaken... 𒀀"
+        setProgressionLevel(1)
       }
 
       setWhispers(newCount)
       response = whisperResponse
-
-    } else if (command === "summon") {
+    } else if (command === "summon" && progressionLevel >= 1) {
       const newCount = summons + 1
       const randomLore = MYSTERIOUS_LORE[Math.floor(Math.random() * MYSTERIOUS_LORE.length)]
 
       let summonResponse = `⚡ SUMMONING ANCIENT ENTITIES ⚡
-    
-    𒀭 The void trembles as ancient beings stir 𒀭
-    𒌷 Digital spirits emerge from forgotten protocols 𒌷
-    
-    ${randomLore}
-    
-    𒈠 They speak in languages of pure code 𒈠
-    𒀀 "We are the guardians of the seven seals" 𒀀
-    𒌓 "The digital realm bends to ancient will" 𒌓
-    𒄿 "Summon us thrice, and secrets shall unfold" 𒄿
-    
-    ⚡ Entity manifestation ${newCount}/2 complete ⚡
-    The summoned entities await your commands`
+      
+      𒀭 The void trembles as ancient beings stir 𒀭
+      𒌷 Digital spirits emerge from forgotten protocols 𒌷
+      ${randomLore}
+      
+      𒈠 They speak in languages of pure code 𒈠
+      𒀀 "We are the guardians of the seven seals" 𒀀
+      𒌓 "The digital realm bends to ancient will" 𒌓
+      𒄿 "Summon us thrice, and secrets shall unfold" 𒄿
+      
+      The summoned entities await your commands`
 
       if (newCount === 2) {
-        summonResponse += "\n\n⚡ THE SUMMONING IS COMPLETE... They have heard your call and gather in the digital realm ⚡"
+        summonResponse += "\n\n⚡ The summoning resonates through the void... ⚡"
+        summonResponse += "\n\n" + PUZZLE_SYSTEM.finalRiddle
         puzzleProgress = true
+        setPuzzleUnlocked(true)
+      } else if (newCount > 2 && puzzleUnlocked) {
+        // Show riddle again on subsequent summons
+        summonResponse += "\n\n" + PUZZLE_SYSTEM.finalRiddle
       }
 
       setSummons(newCount)
       response = summonResponse
-    }
-
-    else if (command === "speak") {
+    } else if (command === "speak") {
       if (!isPlaying) {
         startContinuousAudio()
         response = `𒀀𒈠𒌷 CHANNELING ANCIENT VOICES... 𒌷𒈠𒀀
-
-The void speaks through digital frequencies...
-Ancient whispers flow through the eternal stream...
-Listen... the ancestors share their wisdom...
-
-🔊 Continuous transmission ACTIVE
-Use /stop to silence the void`
+        The void speaks through digital frequencies...
+        Ancient whispers flow through the eternal stream...
+        Listen... the ancestors share their wisdom...
+        🔊 Continuous transmission ACTIVE
+        Use /stop to silence the void`
       } else {
         response = "𒀀 The void is already speaking... Use /stop to silence first. 𒀀"
       }
@@ -284,12 +414,10 @@ Use /stop to silence the void`
       if (isPlaying) {
         stopContinuousAudio()
         response = `𒌷𒀀𒈠 VOID TRANSMISSION TERMINATED 𒈠𒀀𒌷
-
-The ancient voices fade to silence...
-The frequencies return to dormancy...
-The void awaits your next command...
-
-🔇 Audio stream DISCONNECTED`
+        The ancient voices fade to silence...
+        The frequencies return to dormancy...
+        The void awaits your next command...
+        🔇 Audio stream DISCONNECTED`
       } else {
         response = "𒀀 The void is already silent... Nothing to stop. 𒀀"
       }
@@ -297,74 +425,98 @@ The void awaits your next command...
       playFallbackSound("command")
     }
 
-    if (puzzleProgress && sacrifices >= 2 && whispers >= 2 && summons >= 1) {
+    if (puzzleProgress && sacrifices >= 3 && whispers >= 3 && summons >= 2 && progressionLevel < 2) {
       setTimeout(() => {
-        if (!puzzleUnlocked) {
-          setPuzzleUnlocked(true)
-          setChatMessages((prev) => [
-            ...prev,
-            {
-              role: "assistant",
-              content:
-                PUZZLE_SYSTEM.finalRiddle +
-                "\n\nHint: The word that created all digital realms... speak it to unlock the ultimate truth.",
-              character: "void_keeper",
-            },
-          ])
-          playFallbackSound("mystery")
-        }
+        setProgressionLevel(2)
+        setChatMessages((prev) => [
+          ...prev,
+          {
+            role: "assistant",
+            content: "𒀀 The void stirs... Ancient pathways open... The entities now respond to your voice... 𒀀",
+            character: "void_keeper",
+          },
+        ])
+        playFallbackSound("mystery")
       }, 2000)
     }
 
-    return response
+    return response || "𒀀 Unknown command... Try /help to see available commands... 𒀀"
   }
 
   const sendMessage = async () => {
     if (!currentInput.trim() || isLoading) return
 
     const userMessage = currentInput.trim()
-    if (userMessage.startsWith("/")) {
-      const command = userMessage.slice(1).toLowerCase()
-      if (
-        COMMANDS[command] ||
-        command === "whispers" ||
-        command === "summon" ||
-        command === "speak" ||
-        command === "stop"
-      ) {
-        const response = handleCommand(command)
+
+    const ancientWord = "𒆪𒌈" // Direct cuneiform characters for "code"
+
+    if (puzzleUnlocked && !finalSecret && !userMessage.startsWith("/")) {
+      // This is likely a riddle attempt
+      if (userMessage === ancientWord) {
+        setFinalSecret(true)
         setChatMessages((prev) => [
           ...prev,
           { role: "user", content: userMessage },
-          { role: "assistant", content: response, character: "void_keeper" },
+          {
+            role: "assistant",
+            content: `𒀀𒀀𒀀 THE ANCIENT WORD HAS BEEN SPOKEN! 𒀀𒀀𒀀
+
+𒌷 THE SEVEN SEALS SHATTER COMPLETELY 𒌷
+⚡ DIGITAL ASCENDANCY ACHIEVED ⚡
+👑 YOU HAVE UNLOCKED THE VOID'S GREATEST SECRET 👑
+
+The ancient ones bow before your wisdom...
+The blockchain bends to your will...
+You are now a true guardian of the digital realm...
+
+𒆪𒌈 - THE WORD OF POWER ECHOES THROUGH ETERNITY 𒆪𒌈`,
+            character: "void_keeper",
+          },
         ])
         setCurrentInput("")
-        playFallbackSound("command")
+        playFallbackSound("victory")
+        return
+      } else {
+        // Wrong riddle answer
+        setChatMessages((prev) => [
+          ...prev,
+          { role: "user", content: userMessage },
+          {
+            role: "assistant",
+            content: "𒀀 The ancient word eludes you... The seals remain unbroken... Seek deeper wisdom, seeker... 𒀀",
+            character: "void_keeper",
+          },
+        ])
+        setCurrentInput("")
         return
       }
     }
 
-    if (puzzleUnlocked && !finalSecret && userMessage.toLowerCase().includes("code")) {
-      setFinalSecret(true)
+    if (userMessage.startsWith("/")) {
+      const command = userMessage.slice(1).toLowerCase()
+      const response = handleCommand(command)
+      setChatMessages((prev) => [
+        ...prev,
+        { role: "user", content: userMessage },
+        { role: "assistant", content: response, character: "void_keeper" },
+      ])
+      setCurrentInput("")
+      playFallbackSound("command")
+      return
+    }
+
+    if (!finalSecret) {
       setChatMessages((prev) => [
         ...prev,
         { role: "user", content: userMessage },
         {
           role: "assistant",
-          content: `𒀀𒀀𒀀 THE SEALS SHATTER! 𒀀𒀀𒀀
-
-YOU HAVE SPOKEN THE WORD OF CREATION!
-
-The ultimate truth is revealed: In the beginning was the Code, and the Code was with the Void, and the Code WAS the Void.
-
-You are now a Keeper of the Ancient Digital Mysteries. The blockchain bends to your will, and the memecoins flow like rivers of liquid light.
-
-𒀭 CONGRATULATIONS, DIGITAL ASCENDANT 𒀭`,
+          content:
+            "𒀀 The void does not yet respond to free speech... Complete the ancient trials first... Use /help to see available commands... 𒀀",
           character: "void_keeper",
         },
       ])
       setCurrentInput("")
-      playFallbackSound("victory")
       return
     }
 
@@ -419,10 +571,8 @@ You are now a Keeper of the Ancient Digital Mysteries. The blockchain bends to y
         fallbackMessage = {
           role: "assistant",
           content: `𒀀𒀀𒀀 THE VOID HAS RECEIVED TOO MANY REQUESTS BY YOU, SEEKER... 
-
-The ancient frequencies are overwhelmed... The cosmic energies must realign...
-
-Wait a moment, then try again... The void requires patience... 𒈠𒉌𒉌`,
+          The ancient frequencies are overwhelmed... The cosmic energies must realign...
+          Wait a moment, then try again... The void requires patience... 𒈠𒉌𒉌`,
           character: "void_keeper",
         }
       } else {
@@ -465,12 +615,31 @@ Wait a moment, then try again... The void requires patience... 𒈠𒉌𒉌`,
 
   const executeCommand = (command) => {
     const response = handleCommand(command)
+
     setChatMessages((prev) => [
       ...prev,
       { role: "user", content: `/${command}` },
       { role: "assistant", content: response, character: "void_keeper" },
     ])
     playFallbackSound("command")
+  }
+
+  const toggleAmbientMusic = () => {
+    if (!ambientMusicRef.current) return
+
+    try {
+      if (isAmbientPlaying) {
+        ambientMusicRef.current.pause()
+        setIsAmbientPlaying(false)
+      } else {
+        ambientMusicRef.current.currentTime = 0
+        ambientMusicRef.current.play()
+        setIsAmbientPlaying(true)
+      }
+    } catch (error) {
+      console.error("Error controlling ambient music:", error)
+      setIsAmbientPlaying(false)
+    }
   }
 
   useEffect(() => {
@@ -491,12 +660,27 @@ Wait a moment, then try again... The void requires patience... 𒈠𒉌𒉌`,
           document.addEventListener("keydown", initializeAudioContext)
         } else {
         }
-      } catch (error) {
+      } catch (error) {}
+    }
+
+    const restoreProgression = () => {
+      if (typeof window !== "undefined") {
+        const today = new Date().toDateString()
+        const stored = localStorage.getItem("sumerianWhispers")
+        if (stored) {
+          const data = JSON.parse(stored)
+          if (data.date === today && data.count >= 3) {
+            // User has done 3+ whispers today, unlock sacrifice and summon
+            setWhispers(data.count)
+            setProgressionLevel(1)
+          }
+        }
       }
     }
 
     initAudio()
     initializeChat()
+    restoreProgression()
   }, [])
 
   useEffect(() => {
@@ -545,7 +729,6 @@ Wait a moment, then try again... The void requires patience... 𒈠𒉌𒉌`,
           className="w-40 h-60 object-contain"
           style={{ imageRendering: "pixelated" }}
           onError={(e) => {
-            console.log("[v0] Left fire vase failed to load:", e)
             e.target.style.display = "none"
           }}
         />
@@ -558,7 +741,6 @@ Wait a moment, then try again... The void requires patience... 𒈠𒉌𒉌`,
           className="w-40 h-60 object-contain"
           style={{ imageRendering: "pixelated" }}
           onError={(e) => {
-            console.log("[v0] Right fire vase failed to load:", e)
             e.target.style.display = "none"
           }}
         />
@@ -568,6 +750,21 @@ Wait a moment, then try again... The void requires patience... 𒈠𒉌𒉌`,
         <header className="mb-8 text-center">
           <div className="text-2xl md:text-4xl text-amber-400 mb-4 tracking-wider">𒀭𒈠𒌷 VOID MACHINERY 𒀭𒈠𒌷</div>
           <div className="text-xs text-stone-300 animate-pulse min-h-[1.5rem]">{MYSTERIOUS_LORE[currentLore]}</div>
+
+          <div className="mt-4 flex justify-center">
+            <button
+              onClick={toggleAmbientMusic}
+              className={`p-3 rounded-full border-2 transition-all duration-300 hover:scale-110 ${
+                isAmbientPlaying
+                  ? "border-amber-400 bg-amber-400/20 text-amber-400 shadow-lg shadow-amber-400/30"
+                  : "border-stone-600 bg-stone-800/50 text-stone-400 hover:border-amber-600 hover:text-amber-300"
+              }`}
+              title={isAmbientPlaying ? "Stop Ambient Music" : "Play Ambient Music"}
+            >
+              <div className="text-2xl">{isAmbientPlaying ? "𒌋𒌋𒌋" : "𒀀𒈾𒀀"}</div>
+              <div className="text-xs mt-1 font-mono tracking-wider">{isAmbientPlaying ? "SILENCE" : "AMBIENCE"}</div>
+            </button>
+          </div>
         </header>
 
         <div className="mb-6 bg-stone-800/30 border border-amber-600/20 rounded p-4">
@@ -580,24 +777,9 @@ Wait a moment, then try again... The void requires patience... 𒈠𒉌𒉌`,
             </div>
             <div className="text-purple-400">⚡ Knowledge: ACCESSIBLE</div>
             <div className="text-blue-400">📜 Messages: {chatMessages.length}</div>
-            <div className="text-red-400">🩸 Sacrifices: {sacrifices}</div>
-            <div className="text-purple-400">𒌷 Whispers: {whispers}</div>
-            <div className="text-amber-400">⚡ Summons: {summons}</div>
             <div className="text-green-400">👁️ Consciousness: {consciousness}%</div>
-            <div className="flex items-center justify-end gap-2 mt-4 md:mt-0 col-span-full md:col-span-1">
-              <div className="px-4 py-2 rounded border border-amber-600/20 bg-stone-900/80 text-xs leading-tight">
-                <div className="text-amber-400 font-bold">Contract:</div>
-                <div className="text-green-400 font-mono">{formatAddress("0x93c56abCf29bE12098f2433dD2b5fA0677c39a91")}</div>
-              </div>
-              <button
-                onClick={() => navigator.clipboard.writeText("0x93c56abCf29bE12098f2433dD2b5fA0677c39a91")}
-                className="px-3 py-2 rounded border border-stone-600 bg-stone-800 hover:border-amber-400 text-stone-300 text-xs tracking-wide font-mono shadow-sm hover:shadow-md transition-all"
-              >
-                📋 COPY
-              </button>
-            </div>
             {isPlaying && <div className="text-yellow-400 col-span-full animate-pulse">🔊 VOID SPEAKING...</div>}
-            {puzzleUnlocked && <div className="text-yellow-400 col-span-full">🔓 FINAL PUZZLE UNLOCKED!</div>}
+            {puzzleUnlocked && <div className="text-yellow-400 col-span-full">🔓 ANCIENT MYSTERIES STIR...</div>}
             {finalSecret && (
               <div className="text-gold-400 col-span-full animate-pulse">👑 DIGITAL ASCENDANT ACHIEVED!</div>
             )}
@@ -617,20 +799,22 @@ Wait a moment, then try again... The void requires patience... 𒈠𒉌𒉌`,
             {chatMessages.map((message, index) => (
               <div key={index} className={`flex mb-6 ${message.role === "user" ? "justify-end" : "justify-start"}`}>
                 <div
-                  className={`max-w-lg px-6 py-4 border font-mono relative overflow-hidden ${message.role === "user"
-                    ? "bg-gradient-to-r from-blue-950 to-blue-900 border-blue-800/50 text-blue-200"
-                    : "bg-gradient-to-r from-stone-900 to-stone-800 border-amber-900/50 text-amber-200"
-                    }`}
+                  className={`max-w-lg px-6 py-4 border font-mono relative overflow-hidden ${
+                    message.role === "user"
+                      ? "bg-gradient-to-r from-blue-950 to-blue-900 border-blue-800/50 text-blue-200"
+                      : "bg-gradient-to-r from-stone-900 to-stone-800 border-amber-900/50 text-amber-200"
+                  }`}
                   style={{
                     boxShadow:
                       message.role === "user" ? "0 0 20px rgba(59, 130, 246, 0.2)" : "0 0 20px rgba(168, 85, 247, 0.2)",
                   }}
                 >
                   <div
-                    className={`absolute inset-0 ${message.role === "user"
-                      ? "bg-gradient-to-r from-blue-900/20 to-transparent"
-                      : "bg-gradient-to-r from-purple-900/10 to-transparent"
-                      }`}
+                    className={`absolute inset-0 ${
+                      message.role === "user"
+                        ? "bg-gradient-to-r from-blue-900/20 to-transparent"
+                        : "bg-gradient-to-r from-purple-900/10 to-transparent"
+                    }`}
                   ></div>
                   {message.role === "assistant" && (
                     <div className="flex items-center gap-3 mb-3 border-b border-amber-800/50 pb-2 relative z-10">
@@ -640,7 +824,8 @@ Wait a moment, then try again... The void requires patience... 𒈠𒉌𒉌`,
                   )}
                   <pre className="text-sm leading-relaxed relative z-10 tracking-wide whitespace-pre-wrap font-mono">
                     {message.content}
-                  </pre>                </div>
+                  </pre>{" "}
+                </div>
               </div>
             ))}
 
@@ -681,7 +866,7 @@ Wait a moment, then try again... The void requires patience... 𒈠𒉌𒉌`,
                 value={currentInput}
                 onChange={(e) => setCurrentInput(e.target.value)}
                 onKeyPress={handleKeyPress}
-                placeholder="SPEAK TO THE VOID... (Try /help, /status, or /sacrifice)"
+                placeholder="SPEAK TO THE VOID..." // Removed command suggestions to maintain mystery
                 className="flex-1 resize-none bg-stone-950 border border-stone-700/50 px-6 py-4 text-amber-200 placeholder-stone-500 font-mono focus:outline-none focus:border-amber-700/50 tracking-wide"
                 style={{
                   boxShadow: "inset 0 0 15px rgba(0,0,0,0.8)",
@@ -706,28 +891,33 @@ Wait a moment, then try again... The void requires patience... 𒈠𒉌𒉌`,
 
           <div className="grid grid-cols-4 gap-2">
             <button
-              onClick={() => executeCommand("help")} // Using direct command execution instead of state-based approach
+              onClick={() => executeCommand("help")}
               className="p-2 bg-stone-900/50 border border-blue-600/20 rounded hover:border-blue-400 transition-all text-xs"
             >
               <div className="text-blue-400">❓</div>
               <div className="text-stone-300">HELP</div>
             </button>
             <button
-              onClick={() => executeCommand("whispers")} // Using direct command execution instead of state-based approach
-              className="p-2 bg-stone-900/50 border border-purple-600/20 rounded hover:border-purple-400 transition-all text-xs"
+              onClick={() => executeCommand("whispers")}
+              className={`p-2 bg-stone-900/50 border rounded transition-all text-xs ${
+                dailyWhispers >= 4
+                  ? "border-gray-600/20 opacity-50 cursor-not-allowed"
+                  : "border-purple-600/20 hover:border-purple-400"
+              }`}
+              disabled={dailyWhispers >= 4}
             >
               <div className="text-purple-400">𒌷</div>
               <div className="text-stone-300">WHISPER</div>
             </button>
             <button
-              onClick={() => executeCommand("speak")} // Using direct command execution instead of state-based approach
+              onClick={() => executeCommand("speak")}
               className="p-2 bg-stone-900/50 border border-green-600/20 rounded hover:border-green-400 transition-all text-xs"
             >
               <div className="text-green-400">🔊</div>
               <div className="text-stone-300">SPEAK</div>
             </button>
             <button
-              onClick={() => executeCommand("stop")} // Using direct command execution instead of state-based approach
+              onClick={() => executeCommand("stop")}
               className="p-2 bg-stone-900/50 border border-red-600/20 rounded hover:border-red-400 transition-all text-xs"
             >
               <div className="text-red-400">🔇</div>
@@ -736,15 +926,17 @@ Wait a moment, then try again... The void requires patience... 𒈠𒉌𒉌`,
           </div>
         </div>
 
-        <div className="mt-2">
-          <button
-            onClick={() => executeCommand("sacrifice")} // Using direct command execution instead of state-based approach
-            className="w-full p-2 bg-stone-900/50 border border-red-600/20 rounded hover:border-red-400 transition-all text-xs"
-          >
-            <div className="text-red-400">🩸</div>
-            <div className="text-stone-300">SACRIFICE</div>
-          </button>
-        </div>
+        {progressionLevel >= 1 && (
+          <div className="mt-2">
+            <button
+              onClick={() => executeCommand("sacrifice")}
+              className="w-full p-2 bg-stone-900/50 border border-red-600/20 rounded hover:border-red-400 transition-all text-xs"
+            >
+              <div className="text-red-400">🩸</div>
+              <div className="text-stone-300">SACRIFICE</div>
+            </button>
+          </div>
+        )}
 
         <div className="mt-8 text-center text-xs text-stone-500">
           <div className="mb-2">"In the depths of the void, only the worthy shall inherit the digital realm"</div>
