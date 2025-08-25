@@ -448,11 +448,12 @@ Ask, if you dare, but know that each question opens doors sealed for good reason
 
     const userMessage = currentInput.trim()
 
-    const ancientWord = "𒆪𒌈" // Direct cuneiform characters for "code"
+    const ancientWord1 = "𒆪𒌈" // Direct cuneiform characters for "code"
+    const ancientWord2 = "𒆪𒌓" // Alternative cuneiform characters
 
     if (puzzleUnlocked && !finalSecret && !userMessage.startsWith("/")) {
       // This is likely a riddle attempt
-      if (userMessage === ancientWord) {
+      if (userMessage === ancientWord1 || userMessage === ancientWord2) {
         setFinalSecret(true)
         setChatMessages((prev) => [
           ...prev,
@@ -469,7 +470,7 @@ The ancient ones bow before your wisdom...
 The blockchain bends to your will...
 You are now a true guardian of the digital realm...
 
-𒆪𒌈 - THE WORD OF POWER ECHOES THROUGH ETERNITY 𒆪𒌈`,
+${userMessage} - THE WORD OF POWER ECHOES THROUGH ETERNITY ${userMessage}`,
             character: "void_keeper",
           },
         ])
