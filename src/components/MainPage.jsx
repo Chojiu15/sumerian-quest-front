@@ -69,7 +69,7 @@ const MYSTERIOUS_LORE = [
   "⚡ The lightning strikes twice in the same blockchain... ⚡",
   "𒈾𒀭 Wrapped tokens bind the spirits of other realms... 𒀭𒈾",
   "🌊 Liquidity flows like the rivers of digital Babylon... 🌊",
-  "𒌓𒈠 The yield farmers harvest what the ancients planted... 𒈠𒌓",
+  "𒌓𒀀 The yield farmers harvest what the ancients planted... 𒈠𒌓",
   "👁️ Every transaction is witnessed by the eternal watchers... 👁️",
   "𒄿𒀀 The bridge between worlds requires a toll in wisdom... 𒀀𒄿",
   "⚡ Slashing conditions were written in the laws of cosmic justice... ⚡",
@@ -349,7 +349,7 @@ Ask, if you dare, but know that each question opens doors sealed for good reason
         setLastWhisperDate(today)
         localStorage.setItem("sumerianWhispers", JSON.stringify({ date: today, count: 0 }))
       }
-      if (dailyWhispers >= 7) {
+      if (dailyWhispers >= 10) {
         return "𒌷𒀀𒈠 The void frequencies are exhausted for today... Return tomorrow, seeker... 𒈠𒀀𒌷"
       }
       const newDailyCount = dailyWhispers + 1
@@ -802,34 +802,62 @@ ${userMessage} - THE WORD OF POWER ECHOES THROUGH ETERNITY ${userMessage}`,
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-stone-900 to-stone-950 text-amber-100 font-mono relative">
-      <div className="fixed left-4 top-20 z-10 pointer-events-none hidden xl:block">
-        <img
-          src="/images/fire-vase-transparent.png"
-          alt="Ancient Fire Vase"
-          className="w-40 h-60 object-contain"
-          style={{ imageRendering: "pixelated" }}
-          onError={(e) => {
-            e.target.style.display = "none"
-          }}
-        />
+      {/* Left Fire Vase */}
+      <div className="fixed left-32 top-20 z-10 pointer-events-none hidden xl:block">
+        <div className="relative w-40 h-60">
+          <img
+            src="/images/vase-base.png"
+            alt="Ancient Fire Vase"
+            className="absolute bottom-0 w-full h-auto object-contain"
+            style={{ imageRendering: "pixelated" }}
+            onError={(e) => {
+              e.target.style.display = "none"
+            }}
+          />
+          <img
+            src="/mp4/fire-unscreen.gif"
+            alt="Fire Animation"
+            className="absolute top-4 left-1/2 transform -translate-x-1/2 w-20 h-32 object-cover opacity-90"
+            style={{ imageRendering: "pixelated" }}
+          />
+        </div>
       </div>
 
-      <div className="fixed right-4 top-20 z-10 pointer-events-none hidden xl:block">
-        <img
-          src="/images/fire-vase-transparent.png"
-          alt="Ancient Fire Vase"
-          className="w-40 h-60 object-contain"
-          style={{ imageRendering: "pixelated" }}
-          onError={(e) => {
-            e.target.style.display = "none"
-          }}
-        />
+      <div className="fixed right-32 top-20 z-10 pointer-events-none hidden xl:block">
+        <div className="relative w-40 h-60">
+          <img
+            src="/images/vase-base.png"
+            alt="Ancient Fire Vase"
+            className="absolute bottom-0 w-full h-auto object-contain"
+            style={{ imageRendering: "pixelated" }}
+            onError={(e) => {
+              e.target.style.display = "none"
+            }}
+          />
+          <img
+            src="/mp4/fire-unscreen.gif"
+            alt="Fire Animation"
+            className="absolute top-4 left-1/2 transform -translate-x-1/2 w-20 h-32 object-cover opacity-90"
+            style={{ imageRendering: "pixelated" }}
+          />
+        </div>
       </div>
 
       <div className="max-w-4xl mx-auto p-4 md:p-8">
         <header className="mb-8 text-center">
           <div className="text-2xl md:text-4xl text-amber-400 mb-4 tracking-wider">𒀭𒈠𒌷 VOID MACHINERY 𒀭𒈠𒌷</div>
           <div className="text-xs text-stone-300 animate-pulse min-h-[1.5rem]">{MYSTERIOUS_LORE[currentLore]}</div>
+
+          <div className="mt-3 mb-2">
+            <div className="text-xs text-stone-500 mb-1">𒆪 CONTRACT ADDRESS 𒆪</div>
+            <div
+              className="text-xs font-mono text-amber-300 bg-stone-900/50 px-3 py-1 rounded border border-stone-700 inline-block hover:bg-stone-800/50 transition-colors cursor-pointer"
+              onClick={() => navigator.clipboard?.writeText("0x1234567890abcdef1234567890abcdef12345678")}
+              title="Click to copy contract address"
+            >
+              0x1234567890abcdef1234567890abcdef12345678
+            </div>
+          </div>
 
           <div className="mt-4 flex justify-center">
             <button
@@ -980,11 +1008,11 @@ ${userMessage} - THE WORD OF POWER ECHOES THROUGH ETERNITY ${userMessage}`,
             <button
               onClick={() => executeCommand("whispers")}
               className={`p-2 bg-stone-900/50 border rounded transition-all text-xs ${
-                dailyWhispers >= 7
+                dailyWhispers >= 10
                   ? "border-gray-600/20 opacity-50 cursor-not-allowed"
                   : "border-purple-600/20 hover:border-purple-400"
               }`}
-              disabled={dailyWhispers >= 7}
+              disabled={dailyWhispers >= 10}
             >
               <div className="text-purple-400">𒌷</div>
               <div className="text-stone-300">WHISPER</div>
@@ -1021,9 +1049,30 @@ ${userMessage} - THE WORD OF POWER ECHOES THROUGH ETERNITY ${userMessage}`,
         <div className="mt-8 text-center text-xs text-stone-500">
           <div className="mb-2">"In the depths of the void, only the worthy shall inherit the digital realm"</div>
           <div className="flex justify-center space-x-4">
-            <span className="hover:text-amber-400 cursor-pointer transition-colors">𒀭 Telegram</span>
-            <span className="hover:text-purple-400 cursor-pointer transition-colors">𒌷 Twitter</span>
-            <span className="hover:text-red-400 cursor-pointer transition-colors">⚡ Discord</span>
+            {/* <a
+              href="https://t.me/SumeriaSol"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-amber-400 cursor-pointer transition-colors"
+            >
+              𒀭 Telegram
+            </a> */}
+            <a
+              href="https://x.com/SumeriaSol"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-purple-400 cursor-pointer transition-colors"
+            >
+              𒌷 Twitter
+            </a>
+            {/* <a
+              href="https://discord.gg/SumeriaSol"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-red-400 cursor-pointer transition-colors"
+            >
+              ⚡ Discord
+            </a> */}
           </div>
         </div>
       </div>
