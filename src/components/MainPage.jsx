@@ -391,7 +391,7 @@ Ask, if you dare, but know that each question opens doors sealed for good reason
       const newCount = whispers + 1 // Increment progression whispers counter
 
       setWhispersCooldown(true)
-      setTimeout(() => setWhispersCooldown(false), 3000) // 3 second cooldown
+      setTimeout(() => setWhispersCooldown(false), 2000) // 2 second cooldown
 
       try {
         const apiResponse = await fetch("https://sumerian-backend-proxy.vercel.app/api/whispers-citation")
@@ -435,7 +435,7 @@ Ask, if you dare, but know that each question opens doors sealed for good reason
       𒈠 They speak in languages of pure signs 𒈠
       𒀀 "We are the guardians of the seven seals" 𒀀
       𒌓 "The digital realm bends to ancient will" 𒌓
-      𒄿 "Summon us thrice, and secrets shall unfold" 𒄿
+      𒄿 "Summon us twice, and secrets shall unfold" 𒄿
       
       The summoned entities await your commands`
 
@@ -718,7 +718,7 @@ ${userMessage} - THE WORD OF POWER ECHOES THROUGH ETERNITY ${userMessage}`,
     if (isAmbientLoaded || ambientMusicRef.current) return
 
     try {
-      const ambientAudio = new Audio("/audio/ambiance.mp3")
+      const ambientAudio = new Audio("/audio/ambiance.mp4")
       ambientAudio.volume = 0.2
       ambientAudio.loop = true
       ambientMusicRef.current = ambientAudio
