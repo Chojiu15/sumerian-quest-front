@@ -384,7 +384,7 @@ Ask, if you dare, but know that each question opens doors sealed for good reason
 
       const fetchWhispersCitation = async () => {
         try {
-          const response = await fetch("http://localhost:3001/api/whispers-citation")
+          const response = await fetch("https://sumerian-backend-proxy.vercel.app/api/whispers-citation")
           const data = await response.json()
           const randomCitation = data.success ? data.citation : "The void whispers are silent..."
 
