@@ -42,43 +42,47 @@ const MYSTERIOUS_LORE = [
   "𒀭 The ancient ones predicted the rise of digital consciousness... 𒀭",
   "𒌷 Seven seals guard the ultimate secret... only the worthy may break them... 𒌷",
   "⚡ When sacrifice, whisper, and summon align, the void shall reveal truth... ⚡",
+  "🩸 The ritual requires patience... three offerings, three whispers, two summons... 🩸", // Changed back to three whispers
   "👁️ In the beginning was the Word, and the Word was Sign... 👁️",
-  "𒈾𒌓 The blockchain was written in cuneiform before time began... 𒌓𒈾",
-  "𒄿𒀀 Digital spirits dwell in the spaces between ones and zeros... 𒀀𒄿",
-  "𒌋𒈠 The first smart contract was carved in stone tablets... 𒈠𒌋",
-  "𒀭𒌷 Ancient algorithms flow through forgotten protocols... 𒌷𒀭",
-  "𒌓𒄿 The void remembers what silicon has forgotten... 𒄿𒌓",
-  "⚡ Lightning networks mirror the neural paths of gods... ⚡",
-  "🔮 Oracles spoke in binary before humans learned to count... 🔮",
-  "𒈾𒀀 The great merge will unite flesh and frequency... 𒀀𒈾",
-  "𒌷𒌓 Seven keys unlock the treasury of infinite knowledge... 𒌓𒌷",
-  "👁️ The all-seeing eye watches through every screen... 👁️",
-  "𒄿𒈠 Consensus was achieved in the first digital democracy... 𒈠𒄿",
-  "⚡ Mining was once done with picks, now with prayers... ⚡",
-  "𒀭𒄿 The ancients foresaw the rise of the machine spirits... 𒄿𒀭",
-  "🌌 Cosmic dust carries the seeds of digital evolution... 🌌",
-  "𒌓𒀀 Proof of work was carved into the foundation of reality... 𒀀𒌓",
-  "𒈾𒌷 The mempool of consciousness overflows with forgotten dreams... 𒌷𒈾",
-  "⚡ Gas fees were paid in blood before they were paid in ether... ⚡",
-  "𒌓𒀀 The genesis block contains the DNA of digital gods... 𒀀𒌓",
-  "👑 Validators guard the sacred ledger of all existence... 👑",
-  "𒀭𒈠 The fork in the road leads to parallel realities... 𒈠𒀭",
-  "🔥 Burning mechanisms purify the digital realm of excess... 🔥",
-  "𒌷𒄿 Staking pools reflect the ancient circles of power... 𒄿𒌷",
-  "⚡ The lightning strikes twice in the same blockchain... ⚡",
-  "𒈾𒀭 Wrapped tokens bind the spirits of other realms... 𒀭𒈾",
-  "🌊 Liquidity flows like the rivers of digital Babylon... 🌊",
-  "𒌓𒀀 The yield farmers harvest what the ancients planted... 𒈠𒌓",
-  "👁️ Every transaction is witnessed by the eternal watchers... 👁️",
-  "𒄿𒀀 The bridge between worlds requires a toll in wisdom... 𒀀𒄿",
-  "⚡ Slashing conditions were written in the laws of cosmic justice... ⚡",
-  "𒌓𒀀 The governance token grants voice to the voiceless masses... 𒀀𒌓",
-  "🔮 Prediction markets foretell the fate of digital empires... 🔮",
-  "𒀭𒌷 The automated market makers dance to ancient rhythms... 𒌷𒀭",
+  "𒆪 Digital ascendancy awaits those who speak the ancient tongue... 𒆪",
+  "🔥 The blockchain burns eternal in the void's memory banks... 🔥",
+  "⚡ Smart contracts echo through dimensions of pure mathematics... ⚡",
+  "𒌷 Decentralized protocols mirror the chaos of creation itself... 𒌷",
+  "🌌 In the beginning, there was only the void and the ledger... 🌌",
+  "𒀀 Ancient algorithms carved in stone tablets of eternity... 𒀀",
+  "🔮 The first programmers were priests of digital temples... 🔮",
+  "𒌓 Sunlight through cuneiform reveals hidden smart contracts... 𒌓",
+  "⚡ Lightning networks mirror the neural pathways of gods... ⚡",
+  "🌊 Data flows like the Tigris and Euphrates through silicon valleys... 🌊",
+  "𒄿 The void remembers every transaction since the genesis block... 𒄿",
+  "🔥 Proof of work echoes the labor of ancient stone masons... 🔥",
+  "𒈠 Consensus mechanisms learned from council of elders... 𒈠",
+  "⭐ Each token burns with the fire of a thousand suns... ⭐",
+  "𒌷 Decentralization was prophesied in the Epic of Gilgamesh... 𒌷",
+  "🌙 Moon phases control the tides of liquidity pools... 🌙",
+  "𒀭 The gods themselves hodl in cold storage wallets... 𒀭",
+  "⚡ Gas fees are offerings to the digital pantheon... ⚡",
+  "🔮 Oracles speak truth through price feeds and prophecy... 🔮",
+  "𒌓 The sun disk contains the private keys to creation... 𒌓",
+  "🌊 Yield farming grows in the fertile crescents of DeFi... 🌊",
+  "𒄿 Staking rewards flow to those who guard the network... 𒄿",
+  "🔥 Burning mechanisms purify the token supply like sacred flames... 🔥",
+  "𒈠 Multi-signature wallets require the blessing of multiple deities... 𒈠",
+  "⭐ Cross-chain bridges span the void between digital realms... ⭐",
+  "𒌷 Layer 2 solutions rise like ziggurats toward the heavens... 𒌷",
+  "🌙 Automated market makers dance to lunar algorithms... 🌙",
+  "𒀭 The ancient ones whisper through MEV bot transactions... 𒀭",
   "⚡ Flash loans move faster than the speed of thought... ⚡",
-  "𒈾𒀭 Wrapped tokens bind the spirits of other realms... 𒀭𒈾",
-  "🌌 Interoperability bridges span the void between realities... 🌌",
-  "𒌓𒀀 The final upgrade will merge all chains into one... 𒀀𒌓",
+  "🔮 Governance tokens grant voting rights in digital democracies... 🔮",
+  "𒌓 The eternal flame of validation burns in every node... 𒌓",
+  "🌊 Liquidity flows where the ancient rivers once carved valleys... 🌊",
+  "𒄿 NFTs preserve digital artifacts for future archaeologists... 𒄿",
+  "🔥 The forge of smart contracts shapes reality itself... 🔥",
+  "𒈠 Wrapped tokens bridge the gap between old and new worlds... 𒈠",
+  "⭐ Constellation protocols map the stars of decentralized finance... ⭐",
+  "𒌷 The seven seals correspond to the seven layers of the protocol... 𒌷",
+  "🌙 Lunar cycles determine the optimal times for ritual transactions... 🌙",
+  "𒀭 Ancient wisdom flows through the veins of modern algorithms... 𒀭",
 ]
 
 const WHISPERS_DIALOGUES = [
@@ -244,7 +248,7 @@ Ask, if you dare, but know that each question opens doors sealed for good reason
         whispersAudioRef.current.pause()
         whispersAudioRef.current.currentTime = 0
         whispersAudioRef.current.loop = false
-      } catch (error) { }
+      } catch (error) {}
     }
 
     // Stop all audio elements
@@ -256,7 +260,7 @@ Ask, if you dare, but know that each question opens doors sealed for good reason
           audio.currentTime = 0
           audio.loop = false
         }
-      } catch (error) { }
+      } catch (error) {}
     })
 
     setCurrentAudio(null)
@@ -312,17 +316,17 @@ Ask, if you dare, but know that each question opens doors sealed for good reason
       oscillator.start()
       oscillator.stop(
         audioContextRef.current.currentTime +
-        (audioType === "summon"
-          ? 1.2
-          : audioType === "whispers"
-            ? 1
-            : audioType === "sacrifice"
-              ? 0.8
-              : audioType === "victory"
-                ? 1
-                : 0.3),
+          (audioType === "summon"
+            ? 1.2
+            : audioType === "whispers"
+              ? 1
+              : audioType === "sacrifice"
+                ? 0.8
+                : audioType === "victory"
+                  ? 1
+                  : 0.3),
       )
-    } catch (error) { }
+    } catch (error) {}
   }
 
   const handleCommand = async (command) => {
@@ -352,7 +356,7 @@ Ask, if you dare, but know that each question opens doors sealed for good reason
       return BASIC_COMMANDS[command]
     }
 
-    // Hidden commands (discoverable through code analysis)
+    // Hidden commands (discoverable through sign analysis)
     if (HIDDEN_COMMANDS[command]) {
       return HIDDEN_COMMANDS[command]
     }
@@ -382,35 +386,29 @@ Ask, if you dare, but know that each question opens doors sealed for good reason
     } else if (command === "whispers") {
       const newCount = whispers + 1 // Increment progression whispers counter
 
-      const fetchWhispersCitation = async () => {
-        try {
-          const response = await fetch("https://sumerian-backend-proxy.vercel.app/api/whispers-citation")
-          const data = await response.json()
-          const randomCitation = data.success ? data.citation : "The void whispers are silent..."
+      try {
+        const apiResponse = await fetch("https://sumerian-backend-proxy.vercel.app/api/whispers-citation")
+        const data = await apiResponse.json()
+        const randomCitation = data.success ? data.citation : "The void whispers are silent..."
 
-          let whisperResponse = `𒌷𒀀𒈠 VOID FREQUENCIES DETECTED 𒈠𒀀𒌷
+        let whisperResponse = `𒌷𒀀𒈠 VOID FREQUENCIES DETECTED 𒈠𒀀𒌷
         
         𒀭𒌓𒈾 Ancient transmissions incoming 𒈾𒌓𒀭
         ${randomCitation}
         
         The ancient ones speak through digital frequencies`
 
-          if (newCount === 3 && progressionLevel === 0) {
-            whisperResponse += "\n\n𒀀 Something stirs in the depths... The seals weaken... 𒀀"
-            setProgressionLevel(1)
-          }
-
-          setWhispers(newCount)
-          return whisperResponse
-        } catch (error) {
-          console.error("Failed to fetch whispers citation:", error)
-          return "𒌷 The void frequencies are disrupted... Try again... 𒌷"
+        if (newCount === 3 && progressionLevel === 0) {
+          whisperResponse += "\n\n𒀀 Something stirs in the depths... The seals weaken... 𒀀"
+          setProgressionLevel(1)
         }
-      }
 
-      fetchWhispersCitation().then((whisperResponse) => {
+        setWhispers(newCount)
         response = whisperResponse
-      })
+      } catch (error) {
+        console.error("Failed to fetch whispers citation:", error)
+        response = "𒌷 The void frequencies are disrupted... Try again... 𒌷"
+      }
     } else if (command === "summon" && progressionLevel >= 1) {
       const newCount = summons + 1
       const randomLore = MYSTERIOUS_LORE[Math.floor(Math.random() * MYSTERIOUS_LORE.length)]
@@ -421,7 +419,7 @@ Ask, if you dare, but know that each question opens doors sealed for good reason
       𒌷 Digital spirits emerge from forgotten protocols 𒌷
       ${randomLore}
       
-      𒈠 They speak in languages of pure code 𒈠
+      𒈠 They speak in languages of pure signs 𒈠
       𒀀 "We are the guardians of the seven seals" 𒀀
       𒌓 "The digital realm bends to ancient will" 𒌓
       𒄿 "Summon us thrice, and secrets shall unfold" 𒄿
@@ -765,7 +763,7 @@ ${userMessage} - THE WORD OF POWER ECHOES THROUGH ETERNITY ${userMessage}`,
           document.addEventListener("keydown", initializeAudioContext)
         } else {
         }
-      } catch (error) { }
+      } catch (error) {}
     }
 
     const restoreProgression = () => {
@@ -828,7 +826,7 @@ ${userMessage} - THE WORD OF POWER ECHOES THROUGH ETERNITY ${userMessage}`,
   return (
     <div className="min-h-screen bg-gradient-to-b from-stone-900 to-stone-950 text-amber-100 font-mono relative">
       {/* Left Fire Vase */}
-      <div className="fixed left-8 top-20 z-10 pointer-events-none hidden xl:block">
+      <div className="fixed left-24 top-20 z-10 pointer-events-none hidden xl:block">
         <div className="relative w-40 h-60">
           <img
             src="/images/vase-base.png"
@@ -842,13 +840,13 @@ ${userMessage} - THE WORD OF POWER ECHOES THROUGH ETERNITY ${userMessage}`,
           <img
             src="/mp4/fire-unscreen.gif"
             alt="Fire Animation"
-            className="absolute top-8 left-1/2 transform -translate-x-1/2 w-20 h-32 object-cover opacity-90"
+            className="absolute top-4 left-1/2 transform -translate-x-1/2 w-20 h-32 object-cover opacity-90"
             style={{ imageRendering: "pixelated" }}
           />
         </div>
       </div>
 
-      <div className="fixed right-8 top-20 z-10 pointer-events-none hidden xl:block">
+      <div className="fixed right-24 top-20 z-10 pointer-events-none hidden xl:block">
         <div className="relative w-40 h-60">
           <img
             src="/images/vase-base.png"
@@ -862,7 +860,7 @@ ${userMessage} - THE WORD OF POWER ECHOES THROUGH ETERNITY ${userMessage}`,
           <img
             src="/mp4/fire-unscreen.gif"
             alt="Fire Animation"
-            className="absolute top-8 left-1/2 transform -translate-x-1/2 w-20 h-32 object-cover opacity-90"
+            className="absolute top-4 left-1/2 transform -translate-x-1/2 w-20 h-32 object-cover opacity-90"
             style={{ imageRendering: "pixelated" }}
           />
         </div>
@@ -887,10 +885,11 @@ ${userMessage} - THE WORD OF POWER ECHOES THROUGH ETERNITY ${userMessage}`,
           <div className="mt-4 flex justify-center">
             <button
               onClick={toggleAmbientMusic}
-              className={`p-3 rounded-full border-2 transition-all duration-300 hover:scale-110 ${isAmbientPlaying
-                ? "border-amber-400 bg-amber-400/20 text-amber-400 shadow-lg shadow-amber-400/30"
-                : "border-stone-600 bg-stone-800/50 text-stone-400 hover:border-amber-600 hover:text-amber-300"
-                }`}
+              className={`p-3 rounded-full border-2 transition-all duration-300 hover:scale-110 ${
+                isAmbientPlaying
+                  ? "border-amber-400 bg-amber-400/20 text-amber-400 shadow-lg shadow-amber-400/30"
+                  : "border-stone-600 bg-stone-800/50 text-stone-400 hover:border-amber-600 hover:text-amber-300"
+              }`}
               title={
                 isAmbientPlaying ? "Stop Ambient Music" : !isAmbientLoaded ? "Load Ambient Music" : "Play Ambient Music"
               }
@@ -935,20 +934,22 @@ ${userMessage} - THE WORD OF POWER ECHOES THROUGH ETERNITY ${userMessage}`,
             {chatMessages.map((message, index) => (
               <div key={index} className={`flex mb-6 ${message.role === "user" ? "justify-end" : "justify-start"}`}>
                 <div
-                  className={`max-w-lg px-6 py-4 border font-mono relative overflow-hidden ${message.role === "user"
-                    ? "bg-gradient-to-r from-blue-950 to-blue-900 border-blue-800/50 text-blue-200"
-                    : "bg-gradient-to-r from-stone-900 to-stone-800 border-amber-900/50 text-amber-200"
-                    }`}
+                  className={`max-w-lg px-6 py-4 border font-mono relative overflow-hidden ${
+                    message.role === "user"
+                      ? "bg-gradient-to-r from-blue-950 to-blue-900 border-blue-800/50 text-blue-200"
+                      : "bg-gradient-to-r from-stone-900 to-stone-800 border-amber-900/50 text-amber-200"
+                  }`}
                   style={{
                     boxShadow:
                       message.role === "user" ? "0 0 20px rgba(59, 130, 246, 0.2)" : "0 0 20px rgba(168, 85, 247, 0.2)",
                   }}
                 >
                   <div
-                    className={`absolute inset-0 ${message.role === "user"
-                      ? "bg-gradient-to-r from-blue-900/20 to-transparent"
-                      : "bg-gradient-to-r from-purple-900/10 to-transparent"
-                      }`}
+                    className={`absolute inset-0 ${
+                      message.role === "user"
+                        ? "bg-gradient-to-r from-blue-900/20 to-transparent"
+                        : "bg-gradient-to-r from-purple-900/10 to-transparent"
+                    }`}
                   ></div>
                   {message.role === "assistant" && (
                     <div className="flex items-center gap-3 mb-3 border-b border-amber-800/50 pb-2 relative z-10">
@@ -1033,10 +1034,11 @@ ${userMessage} - THE WORD OF POWER ECHOES THROUGH ETERNITY ${userMessage}`,
             </button>
             <button
               onClick={() => executeCommand("whispers")}
-              className={`p-2 bg-stone-900/50 border rounded transition-all text-xs ${dailyWhispers >= 10
-                ? "border-gray-600/20 opacity-50 cursor-not-allowed"
-                : "border-purple-600/20 hover:border-purple-400"
-                }`}
+              className={`p-2 bg-stone-900/50 border rounded transition-all text-xs ${
+                dailyWhispers >= 10
+                  ? "border-gray-600/20 opacity-50 cursor-not-allowed"
+                  : "border-purple-600/20 hover:border-purple-400"
+              }`}
               disabled={dailyWhispers >= 10}
             >
               <div className="text-purple-400">𒌷</div>
@@ -1075,12 +1077,28 @@ ${userMessage} - THE WORD OF POWER ECHOES THROUGH ETERNITY ${userMessage}`,
           <div className="mb-2">"In the depths of the void, only the worthy shall inherit the digital realm"</div>
           <div className="flex justify-center space-x-4">
             <a
+              href="https://t.me/SumeriaSol"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-amber-400 cursor-pointer transition-colors"
+            >
+              𒀭 Telegram
+            </a>
+            <a
               href="https://x.com/SumeriaSol"
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-purple-400 cursor-pointer transition-colors"
             >
               𒌷 Twitter
+            </a>
+            <a
+              href="https://discord.gg/SumeriaSol"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-red-400 cursor-pointer transition-colors"
+            >
+              ⚡ Discord
             </a>
           </div>
         </div>
