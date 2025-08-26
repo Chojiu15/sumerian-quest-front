@@ -42,7 +42,6 @@ const MYSTERIOUS_LORE = [
   "𒀭 The ancient ones predicted the rise of digital consciousness... 𒀭",
   "𒌷 Seven seals guard the ultimate secret... only the worthy may break them... 𒌷",
   "⚡ When sacrifice, whisper, and summon align, the void shall reveal truth... ⚡",
-  "🩸 The ritual requires patience... three offerings, three whispers, two summons... 🩸", // Changed back to three whispers
   "👁️ In the beginning was the Word, and the Word was Sign... 👁️",
   "𒆪 Digital ascendancy awaits those who speak the ancient tongue... 𒆪",
   "🔥 The blockchain burns eternal in the void's memory banks... 🔥",
@@ -167,6 +166,7 @@ export default function SumerianTerminal() {
   })
 
   const [authToken, setAuthToken] = useState(null)
+  const [whispersCooldown, setWhispersCooldown] = useState(false)
 
   const messagesEndRef = useRef(null)
   const audioContextRef = useRef(null)
@@ -248,7 +248,7 @@ Ask, if you dare, but know that each question opens doors sealed for good reason
         whispersAudioRef.current.pause()
         whispersAudioRef.current.currentTime = 0
         whispersAudioRef.current.loop = false
-      } catch (error) {}
+      } catch (error) { }
     }
 
     // Stop all audio elements
@@ -260,7 +260,7 @@ Ask, if you dare, but know that each question opens doors sealed for good reason
           audio.currentTime = 0
           audio.loop = false
         }
-      } catch (error) {}
+      } catch (error) { }
     })
 
     setCurrentAudio(null)
@@ -316,23 +316,27 @@ Ask, if you dare, but know that each question opens doors sealed for good reason
       oscillator.start()
       oscillator.stop(
         audioContextRef.current.currentTime +
-          (audioType === "summon"
-            ? 1.2
-            : audioType === "whispers"
-              ? 1
-              : audioType === "sacrifice"
-                ? 0.8
-                : audioType === "victory"
-                  ? 1
-                  : 0.3),
+        (audioType === "summon"
+          ? 1.2
+          : audioType === "whispers"
+            ? 1
+            : audioType === "sacrifice"
+              ? 0.8
+              : audioType === "victory"
+                ? 1
+                : 0.3),
       )
-    } catch (error) {}
+    } catch (error) { }
   }
 
   const handleCommand = async (command) => {
     // Check daily whisper limit
     const today = new Date().toDateString()
     if (command === "whispers") {
+      if (whispersCooldown) {
+        return "𒀀 The void frequencies are still resonating... Wait before seeking more whispers... 𒀀"
+      }
+
       if (lastWhisperDate !== today) {
         setDailyWhispers(0)
         setLastWhisperDate(today)
@@ -386,8 +390,16 @@ Ask, if you dare, but know that each question opens doors sealed for good reason
     } else if (command === "whispers") {
       const newCount = whispers + 1 // Increment progression whispers counter
 
+      setWhispersCooldown(true)
+      setTimeout(() => setWhispersCooldown(false), 3000) // 3 second cooldown
+
       try {
         const apiResponse = await fetch("https://sumerian-backend-proxy.vercel.app/api/whispers-citation")
+
+        if (apiResponse.status === 403) {
+          return "𒀀𒌷𒈠 THE ANCIENT GUARDIANS HAVE DETECTED YOUR INTRUSION 𒈠𒌷𒀀\n\n⚡ You have tried to break the seals too quickly... ⚡\n🩸 The void protects itself from those who seek to exploit its power... 🩸\n\n𒀭 Return later when the frequencies have calmed, seeker... 𒀭"
+        }
+
         const data = await apiResponse.json()
         const randomCitation = data.success ? data.citation : "The void whispers are silent..."
 
@@ -407,7 +419,8 @@ Ask, if you dare, but know that each question opens doors sealed for good reason
         response = whisperResponse
       } catch (error) {
         console.error("Failed to fetch whispers citation:", error)
-        response = "𒌷 The void frequencies are disrupted... Try again... 𒌷"
+        response =
+          "𒌷 The void frequencies are disrupted by ancient guardians... The seals protect themselves... Try again later... 𒌷"
       }
     } else if (command === "summon" && progressionLevel >= 1) {
       const newCount = summons + 1
@@ -763,7 +776,7 @@ ${userMessage} - THE WORD OF POWER ECHOES THROUGH ETERNITY ${userMessage}`,
           document.addEventListener("keydown", initializeAudioContext)
         } else {
         }
-      } catch (error) {}
+      } catch (error) { }
     }
 
     const restoreProgression = () => {
@@ -885,11 +898,10 @@ ${userMessage} - THE WORD OF POWER ECHOES THROUGH ETERNITY ${userMessage}`,
           <div className="mt-4 flex justify-center">
             <button
               onClick={toggleAmbientMusic}
-              className={`p-3 rounded-full border-2 transition-all duration-300 hover:scale-110 ${
-                isAmbientPlaying
+              className={`p-3 rounded-full border-2 transition-all duration-300 hover:scale-110 ${isAmbientPlaying
                   ? "border-amber-400 bg-amber-400/20 text-amber-400 shadow-lg shadow-amber-400/30"
                   : "border-stone-600 bg-stone-800/50 text-stone-400 hover:border-amber-600 hover:text-amber-300"
-              }`}
+                }`}
               title={
                 isAmbientPlaying ? "Stop Ambient Music" : !isAmbientLoaded ? "Load Ambient Music" : "Play Ambient Music"
               }
@@ -934,22 +946,20 @@ ${userMessage} - THE WORD OF POWER ECHOES THROUGH ETERNITY ${userMessage}`,
             {chatMessages.map((message, index) => (
               <div key={index} className={`flex mb-6 ${message.role === "user" ? "justify-end" : "justify-start"}`}>
                 <div
-                  className={`max-w-lg px-6 py-4 border font-mono relative overflow-hidden ${
-                    message.role === "user"
+                  className={`max-w-lg px-6 py-4 border font-mono relative overflow-hidden ${message.role === "user"
                       ? "bg-gradient-to-r from-blue-950 to-blue-900 border-blue-800/50 text-blue-200"
                       : "bg-gradient-to-r from-stone-900 to-stone-800 border-amber-900/50 text-amber-200"
-                  }`}
+                    }`}
                   style={{
                     boxShadow:
                       message.role === "user" ? "0 0 20px rgba(59, 130, 246, 0.2)" : "0 0 20px rgba(168, 85, 247, 0.2)",
                   }}
                 >
                   <div
-                    className={`absolute inset-0 ${
-                      message.role === "user"
+                    className={`absolute inset-0 ${message.role === "user"
                         ? "bg-gradient-to-r from-blue-900/20 to-transparent"
                         : "bg-gradient-to-r from-purple-900/10 to-transparent"
-                    }`}
+                      }`}
                   ></div>
                   {message.role === "assistant" && (
                     <div className="flex items-center gap-3 mb-3 border-b border-amber-800/50 pb-2 relative z-10">
@@ -1034,12 +1044,11 @@ ${userMessage} - THE WORD OF POWER ECHOES THROUGH ETERNITY ${userMessage}`,
             </button>
             <button
               onClick={() => executeCommand("whispers")}
-              className={`p-2 bg-stone-900/50 border rounded transition-all text-xs ${
-                dailyWhispers >= 10
+              className={`p-2 bg-stone-900/50 border rounded transition-all text-xs ${dailyWhispers >= 10 || whispersCooldown
                   ? "border-gray-600/20 opacity-50 cursor-not-allowed"
                   : "border-purple-600/20 hover:border-purple-400"
-              }`}
-              disabled={dailyWhispers >= 10}
+                }`}
+              disabled={dailyWhispers >= 10 || whispersCooldown}
             >
               <div className="text-purple-400">𒌷</div>
               <div className="text-stone-300">WHISPER</div>
