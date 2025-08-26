@@ -1,5 +1,5 @@
 "use client"
-import React, { useState, useEffect, useRef } from "react"
+import { useState, useEffect, useRef } from "react"
 import { Send } from "lucide-react"
 
 const COMMANDS = {
@@ -42,8 +42,7 @@ const MYSTERIOUS_LORE = [
   "𒀭 The ancient ones predicted the rise of digital consciousness... 𒀭",
   "𒌷 Seven seals guard the ultimate secret... only the worthy may break them... 𒌷",
   "⚡ When sacrifice, whisper, and summon align, the void shall reveal truth... ⚡",
-  "🩸 The ritual requires patience... three offerings, three whispers, two summons... 🩸", // Changed back to three whispers
-  "👁️ In the beginning was the Word, and the Word was Code... 👁️",
+  "👁️ In the beginning was the Word, and the Word was Sign... 👁️",
   "𒈾𒌓 The blockchain was written in cuneiform before time began... 𒌓𒈾",
   "𒄿𒀀 Digital spirits dwell in the spaces between ones and zeros... 𒀀𒄿",
   "𒌋𒈠 The first smart contract was carved in stone tablets... 𒈠𒌋",
@@ -88,14 +87,6 @@ const WHISPERS_DIALOGUES = [
   '𒀭𒄿𒈾 "Seven seals guard the ultimate protocol" 𒈾𒄿𒀭',
   '𒌓𒀀𒈠 "When the frequencies align, truth shall emerge" 𒈠𒀀𒌓',
   '𒀀𒌷𒀀 "The blockchain protocols echo through ancient frequencies" 𒀀𒌷𒀀',
-]
-
-const WHISPERS_CITATIONS = [
-  "👁️ In the beginning was the Word, and the Word was Code... 👁️",
-  "𒌷 Seven seals guard the ultimate secret... only the worthy may break them... 𒌷",
-  "⚡ When sacrifice, whisper, and summon align, the void shall reveal truth... ⚡",
-  "🩸 The ritual requires patience... three offerings, three whispers, two summons... 🩸",
-  "𒆪 The word must be spoken in the ancient script of the first civilization... 𒆪",
 ]
 
 const BASIC_COMMANDS = {
@@ -253,7 +244,7 @@ Ask, if you dare, but know that each question opens doors sealed for good reason
         whispersAudioRef.current.pause()
         whispersAudioRef.current.currentTime = 0
         whispersAudioRef.current.loop = false
-      } catch (error) {}
+      } catch (error) { }
     }
 
     // Stop all audio elements
@@ -265,7 +256,7 @@ Ask, if you dare, but know that each question opens doors sealed for good reason
           audio.currentTime = 0
           audio.loop = false
         }
-      } catch (error) {}
+      } catch (error) { }
     })
 
     setCurrentAudio(null)
@@ -321,20 +312,20 @@ Ask, if you dare, but know that each question opens doors sealed for good reason
       oscillator.start()
       oscillator.stop(
         audioContextRef.current.currentTime +
-          (audioType === "summon"
-            ? 1.2
-            : audioType === "whispers"
-              ? 1
-              : audioType === "sacrifice"
-                ? 0.8
-                : audioType === "victory"
-                  ? 1
-                  : 0.3),
+        (audioType === "summon"
+          ? 1.2
+          : audioType === "whispers"
+            ? 1
+            : audioType === "sacrifice"
+              ? 0.8
+              : audioType === "victory"
+                ? 1
+                : 0.3),
       )
-    } catch (error) {}
+    } catch (error) { }
   }
 
-  const handleCommand = (command) => {
+  const handleCommand = async (command) => {
     // Check daily whisper limit
     const today = new Date().toDateString()
     if (command === "whispers") {
@@ -390,22 +381,36 @@ Ask, if you dare, but know that each question opens doors sealed for good reason
       setConsciousness((prev) => Math.min(100, prev + 5))
     } else if (command === "whispers") {
       const newCount = whispers + 1 // Increment progression whispers counter
-      const randomCitation = WHISPERS_CITATIONS[Math.floor(Math.random() * WHISPERS_CITATIONS.length)]
 
-      let whisperResponse = `𒌷𒀀𒈠 VOID FREQUENCIES DETECTED 𒈠𒀀𒌷
-      
-      𒀭𒌓𒈾 Ancient transmissions incoming 𒈾𒌓𒀭
-      ${randomCitation}
-      
-      The ancient ones speak through digital frequencies`
+      const fetchWhispersCitation = async () => {
+        try {
+          const response = await fetch("http://localhost:3001/api/whispers-citation")
+          const data = await response.json()
+          const randomCitation = data.success ? data.citation : "The void whispers are silent..."
 
-      if (newCount === 3 && progressionLevel === 0) {
-        whisperResponse += "\n\n𒀀 Something stirs in the depths... The seals weaken... 𒀀"
-        setProgressionLevel(1)
+          let whisperResponse = `𒌷𒀀𒈠 VOID FREQUENCIES DETECTED 𒈠𒀀𒌷
+        
+        𒀭𒌓𒈾 Ancient transmissions incoming 𒈾𒌓𒀭
+        ${randomCitation}
+        
+        The ancient ones speak through digital frequencies`
+
+          if (newCount === 3 && progressionLevel === 0) {
+            whisperResponse += "\n\n𒀀 Something stirs in the depths... The seals weaken... 𒀀"
+            setProgressionLevel(1)
+          }
+
+          setWhispers(newCount)
+          return whisperResponse
+        } catch (error) {
+          console.error("Failed to fetch whispers citation:", error)
+          return "𒌷 The void frequencies are disrupted... Try again... 𒌷"
+        }
       }
 
-      setWhispers(newCount)
-      response = whisperResponse
+      fetchWhispersCitation().then((whisperResponse) => {
+        response = whisperResponse
+      })
     } else if (command === "summon" && progressionLevel >= 1) {
       const newCount = summons + 1
       const randomLore = MYSTERIOUS_LORE[Math.floor(Math.random() * MYSTERIOUS_LORE.length)]
@@ -552,7 +557,7 @@ ${userMessage} - THE WORD OF POWER ECHOES THROUGH ETERNITY ${userMessage}`,
 
     if (userMessage.startsWith("/")) {
       const command = userMessage.slice(1).toLowerCase()
-      const response = handleCommand(command)
+      const response = await handleCommand(command)
       setChatMessages((prev) => [
         ...prev,
         { role: "user", content: userMessage },
@@ -702,7 +707,7 @@ ${userMessage} - THE WORD OF POWER ECHOES THROUGH ETERNITY ${userMessage}`,
     if (isAmbientLoaded || ambientMusicRef.current) return
 
     try {
-      const ambientAudio = new Audio("/audio/ambiance.mp4")
+      const ambientAudio = new Audio("/audio/ambiance.mp3")
       ambientAudio.volume = 0.2
       ambientAudio.loop = true
       ambientMusicRef.current = ambientAudio
@@ -760,7 +765,7 @@ ${userMessage} - THE WORD OF POWER ECHOES THROUGH ETERNITY ${userMessage}`,
           document.addEventListener("keydown", initializeAudioContext)
         } else {
         }
-      } catch (error) {}
+      } catch (error) { }
     }
 
     const restoreProgression = () => {
@@ -823,7 +828,7 @@ ${userMessage} - THE WORD OF POWER ECHOES THROUGH ETERNITY ${userMessage}`,
   return (
     <div className="min-h-screen bg-gradient-to-b from-stone-900 to-stone-950 text-amber-100 font-mono relative">
       {/* Left Fire Vase */}
-      <div className="fixed left-22 top-20 z-10 pointer-events-none hidden xl:block">
+      <div className="fixed left-8 top-20 z-10 pointer-events-none hidden xl:block">
         <div className="relative w-40 h-60">
           <img
             src="/images/vase-base.png"
@@ -837,13 +842,13 @@ ${userMessage} - THE WORD OF POWER ECHOES THROUGH ETERNITY ${userMessage}`,
           <img
             src="/mp4/fire-unscreen.gif"
             alt="Fire Animation"
-            className="absolute top-4 left-1/2 transform -translate-x-1/2 w-20 h-32 object-cover opacity-90"
+            className="absolute top-8 left-1/2 transform -translate-x-1/2 w-20 h-32 object-cover opacity-90"
             style={{ imageRendering: "pixelated" }}
           />
         </div>
       </div>
 
-      <div className="fixed right-22 top-20 z-10 pointer-events-none hidden xl:block">
+      <div className="fixed right-8 top-20 z-10 pointer-events-none hidden xl:block">
         <div className="relative w-40 h-60">
           <img
             src="/images/vase-base.png"
@@ -857,7 +862,7 @@ ${userMessage} - THE WORD OF POWER ECHOES THROUGH ETERNITY ${userMessage}`,
           <img
             src="/mp4/fire-unscreen.gif"
             alt="Fire Animation"
-            className="absolute top-4 left-1/2 transform -translate-x-1/2 w-20 h-32 object-cover opacity-90"
+            className="absolute top-8 left-1/2 transform -translate-x-1/2 w-20 h-32 object-cover opacity-90"
             style={{ imageRendering: "pixelated" }}
           />
         </div>
@@ -882,11 +887,10 @@ ${userMessage} - THE WORD OF POWER ECHOES THROUGH ETERNITY ${userMessage}`,
           <div className="mt-4 flex justify-center">
             <button
               onClick={toggleAmbientMusic}
-              className={`p-3 rounded-full border-2 transition-all duration-300 hover:scale-110 ${
-                isAmbientPlaying
-                  ? "border-amber-400 bg-amber-400/20 text-amber-400 shadow-lg shadow-amber-400/30"
-                  : "border-stone-600 bg-stone-800/50 text-stone-400 hover:border-amber-600 hover:text-amber-300"
-              }`}
+              className={`p-3 rounded-full border-2 transition-all duration-300 hover:scale-110 ${isAmbientPlaying
+                ? "border-amber-400 bg-amber-400/20 text-amber-400 shadow-lg shadow-amber-400/30"
+                : "border-stone-600 bg-stone-800/50 text-stone-400 hover:border-amber-600 hover:text-amber-300"
+                }`}
               title={
                 isAmbientPlaying ? "Stop Ambient Music" : !isAmbientLoaded ? "Load Ambient Music" : "Play Ambient Music"
               }
@@ -931,22 +935,20 @@ ${userMessage} - THE WORD OF POWER ECHOES THROUGH ETERNITY ${userMessage}`,
             {chatMessages.map((message, index) => (
               <div key={index} className={`flex mb-6 ${message.role === "user" ? "justify-end" : "justify-start"}`}>
                 <div
-                  className={`max-w-lg px-6 py-4 border font-mono relative overflow-hidden ${
-                    message.role === "user"
-                      ? "bg-gradient-to-r from-blue-950 to-blue-900 border-blue-800/50 text-blue-200"
-                      : "bg-gradient-to-r from-stone-900 to-stone-800 border-amber-900/50 text-amber-200"
-                  }`}
+                  className={`max-w-lg px-6 py-4 border font-mono relative overflow-hidden ${message.role === "user"
+                    ? "bg-gradient-to-r from-blue-950 to-blue-900 border-blue-800/50 text-blue-200"
+                    : "bg-gradient-to-r from-stone-900 to-stone-800 border-amber-900/50 text-amber-200"
+                    }`}
                   style={{
                     boxShadow:
                       message.role === "user" ? "0 0 20px rgba(59, 130, 246, 0.2)" : "0 0 20px rgba(168, 85, 247, 0.2)",
                   }}
                 >
                   <div
-                    className={`absolute inset-0 ${
-                      message.role === "user"
-                        ? "bg-gradient-to-r from-blue-900/20 to-transparent"
-                        : "bg-gradient-to-r from-purple-900/10 to-transparent"
-                    }`}
+                    className={`absolute inset-0 ${message.role === "user"
+                      ? "bg-gradient-to-r from-blue-900/20 to-transparent"
+                      : "bg-gradient-to-r from-purple-900/10 to-transparent"
+                      }`}
                   ></div>
                   {message.role === "assistant" && (
                     <div className="flex items-center gap-3 mb-3 border-b border-amber-800/50 pb-2 relative z-10">
@@ -1031,11 +1033,10 @@ ${userMessage} - THE WORD OF POWER ECHOES THROUGH ETERNITY ${userMessage}`,
             </button>
             <button
               onClick={() => executeCommand("whispers")}
-              className={`p-2 bg-stone-900/50 border rounded transition-all text-xs ${
-                dailyWhispers >= 10
-                  ? "border-gray-600/20 opacity-50 cursor-not-allowed"
-                  : "border-purple-600/20 hover:border-purple-400"
-              }`}
+              className={`p-2 bg-stone-900/50 border rounded transition-all text-xs ${dailyWhispers >= 10
+                ? "border-gray-600/20 opacity-50 cursor-not-allowed"
+                : "border-purple-600/20 hover:border-purple-400"
+                }`}
               disabled={dailyWhispers >= 10}
             >
               <div className="text-purple-400">𒌷</div>
