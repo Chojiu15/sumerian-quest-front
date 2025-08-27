@@ -93,10 +93,7 @@ const WHISPERS_DIALOGUES = [
 ]
 
 const BASIC_COMMANDS = {
-  help: `┌─────────────────────────────────────┐
-│          SYSTEM COMMAND HELP        │
-└─────────────────────────────────────┘
-
+  help: `
 AVAILABLE COMMANDS:
   /help      - Display this help screen
   /status    - Show system diagnostics  
@@ -111,10 +108,7 @@ SYSTEM INFO:
 
 WARNING: More commands unlock as you progress
          through the ancient mysteries...
-
-Type commands with / prefix to execute.
-
-═══════════════════════════════════════`,
+`,
 
   status: "Ancient seals: ACTIVE | Void connection: ESTABLISHED | Forbidden knowledge: LIMITED ACCESS",
 }
@@ -199,6 +193,7 @@ Ask, if you dare, but know that each question opens doors sealed for good reason
       const audio = new Audio("/audio/whispers.wav")
       audio.preload = "auto"
       audio.volume = 0.4
+      audio.crossOrigin = "anonymous"
       whispersAudioRef.current = audio
     } catch (error) {
       whispersAudioRef.current = null
@@ -248,7 +243,7 @@ Ask, if you dare, but know that each question opens doors sealed for good reason
         whispersAudioRef.current.pause()
         whispersAudioRef.current.currentTime = 0
         whispersAudioRef.current.loop = false
-      } catch (error) { }
+      } catch (error) {}
     }
 
     // Stop all audio elements
@@ -260,7 +255,7 @@ Ask, if you dare, but know that each question opens doors sealed for good reason
           audio.currentTime = 0
           audio.loop = false
         }
-      } catch (error) { }
+      } catch (error) {}
     })
 
     setCurrentAudio(null)
@@ -316,17 +311,17 @@ Ask, if you dare, but know that each question opens doors sealed for good reason
       oscillator.start()
       oscillator.stop(
         audioContextRef.current.currentTime +
-        (audioType === "summon"
-          ? 1.2
-          : audioType === "whispers"
-            ? 1
-            : audioType === "sacrifice"
-              ? 0.8
-              : audioType === "victory"
-                ? 1
-                : 0.3),
+          (audioType === "summon"
+            ? 1.2
+            : audioType === "whispers"
+              ? 1
+              : audioType === "sacrifice"
+                ? 0.8
+                : audioType === "victory"
+                  ? 1
+                  : 0.3),
       )
-    } catch (error) { }
+    } catch (error) {}
   }
 
   const handleCommand = async (command) => {
@@ -391,7 +386,7 @@ Ask, if you dare, but know that each question opens doors sealed for good reason
       const newCount = whispers + 1 // Increment progression whispers counter
 
       setWhispersCooldown(true)
-      setTimeout(() => setWhispersCooldown(false), 2000) // 2 second cooldown
+      setTimeout(() => setWhispersCooldown(false), 2000) // 2 seconds cooldown
 
       try {
         const apiResponse = await fetch("https://sumerian-backend-proxy.vercel.app/api/whispers-citation")
@@ -528,7 +523,7 @@ The ancient ones bow before your wisdom...
 The blockchain bends to your will...
 You are now a true guardian of the digital realm...
 
-${userMessage} - THE WORD OF POWER ECHOES THROUGH ETERNITY ${userMessage}`,
+${userMessage} - SPEAK FREELY TO THE VOID TRAVELER ${userMessage}`,
                 character: "void_keeper",
               },
             ])
@@ -718,9 +713,10 @@ ${userMessage} - THE WORD OF POWER ECHOES THROUGH ETERNITY ${userMessage}`,
     if (isAmbientLoaded || ambientMusicRef.current) return
 
     try {
-      const ambientAudio = new Audio("/audio/ambiance.mp4")
+      const ambientAudio = new Audio("https://6j8cf2hshr5dj3g5.public.blob.vercel-storage.com/krazoa-palace.mp4")
       ambientAudio.volume = 0.2
       ambientAudio.loop = true
+      ambientAudio.crossOrigin = "anonymous"
       ambientMusicRef.current = ambientAudio
       setIsAmbientLoaded(true)
 
@@ -776,7 +772,7 @@ ${userMessage} - THE WORD OF POWER ECHOES THROUGH ETERNITY ${userMessage}`,
           document.addEventListener("keydown", initializeAudioContext)
         } else {
         }
-      } catch (error) { }
+      } catch (error) {}
     }
 
     const restoreProgression = () => {
@@ -853,13 +849,13 @@ ${userMessage} - THE WORD OF POWER ECHOES THROUGH ETERNITY ${userMessage}`,
           <img
             src="/mp4/fire-unscreen.gif"
             alt="Fire Animation"
-            className="absolute top-4 left-1/2 transform -translate-x-1/2 w-20 h-32 object-cover opacity-90"
+            className="absolute top-8 left-1/2 transform -translate-x-1/2 w-20 h-32 object-cover opacity-90"
             style={{ imageRendering: "pixelated" }}
           />
         </div>
       </div>
 
-      <div className="fixed right-24 top-20 z-10 pointer-events-none hidden xl:block">
+      <div className="fixed right-8 top-20 z-10 pointer-events-none hidden xl:block">
         <div className="relative w-40 h-60">
           <img
             src="/images/vase-base.png"
@@ -873,7 +869,7 @@ ${userMessage} - THE WORD OF POWER ECHOES THROUGH ETERNITY ${userMessage}`,
           <img
             src="/mp4/fire-unscreen.gif"
             alt="Fire Animation"
-            className="absolute top-4 left-1/2 transform -translate-x-1/2 w-20 h-32 object-cover opacity-90"
+            className="absolute top-8 left-1/2 transform -translate-x-1/2 w-20 h-32 object-cover opacity-90"
             style={{ imageRendering: "pixelated" }}
           />
         </div>
@@ -898,10 +894,11 @@ ${userMessage} - THE WORD OF POWER ECHOES THROUGH ETERNITY ${userMessage}`,
           <div className="mt-4 flex justify-center">
             <button
               onClick={toggleAmbientMusic}
-              className={`p-3 rounded-full border-2 transition-all duration-300 hover:scale-110 ${isAmbientPlaying
+              className={`p-3 rounded-full border-2 transition-all duration-300 hover:scale-110 ${
+                isAmbientPlaying
                   ? "border-amber-400 bg-amber-400/20 text-amber-400 shadow-lg shadow-amber-400/30"
                   : "border-stone-600 bg-stone-800/50 text-stone-400 hover:border-amber-600 hover:text-amber-300"
-                }`}
+              }`}
               title={
                 isAmbientPlaying ? "Stop Ambient Music" : !isAmbientLoaded ? "Load Ambient Music" : "Play Ambient Music"
               }
@@ -915,7 +912,7 @@ ${userMessage} - THE WORD OF POWER ECHOES THROUGH ETERNITY ${userMessage}`,
         </header>
 
         <div className="mb-6 bg-stone-800/30 border border-amber-600/20 rounded p-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-2 text-xs">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 text-xs">
             <div className="text-green-400">✓ Seals: ACTIVE</div>
             <div
               className={`${apiStatus === "CONNECTED" ? "text-green-400" : apiStatus === "UNSTABLE" ? "text-yellow-400" : "text-red-400"}`}
@@ -944,52 +941,57 @@ ${userMessage} - THE WORD OF POWER ECHOES THROUGH ETERNITY ${userMessage}`,
             }}
           >
             {chatMessages.map((message, index) => (
-              <div key={index} className={`flex mb-6 ${message.role === "user" ? "justify-end" : "justify-start"}`}>
+              <div
+                key={index}
+                className={`flex mb-4 md:mb-6 ${message.role === "user" ? "justify-end" : "justify-start"}`}
+              >
                 <div
-                  className={`max-w-lg px-6 py-4 border font-mono relative overflow-hidden ${message.role === "user"
+                  className={`max-w-[85%] sm:max-w-lg px-4 md:px-6 py-3 md:py-4 border font-mono relative overflow-hidden ${
+                    message.role === "user"
                       ? "bg-gradient-to-r from-blue-950 to-blue-900 border-blue-800/50 text-blue-200"
                       : "bg-gradient-to-r from-stone-900 to-stone-800 border-amber-900/50 text-amber-200"
-                    }`}
+                  }`}
                   style={{
                     boxShadow:
                       message.role === "user" ? "0 0 20px rgba(59, 130, 246, 0.2)" : "0 0 20px rgba(168, 85, 247, 0.2)",
                   }}
                 >
                   <div
-                    className={`absolute inset-0 ${message.role === "user"
+                    className={`absolute inset-0 ${
+                      message.role === "user"
                         ? "bg-gradient-to-r from-blue-900/20 to-transparent"
                         : "bg-gradient-to-r from-purple-900/10 to-transparent"
-                      }`}
+                    }`}
                   ></div>
                   {message.role === "assistant" && (
-                    <div className="flex items-center gap-3 mb-3 border-b border-amber-800/50 pb-2 relative z-10">
-                      <span className="text-2xl">𒀀</span>
+                    <div className="flex items-center gap-2 md:gap-3 mb-2 md:mb-3 border-b border-amber-800/50 pb-2 relative z-10">
+                      <span className="text-xl md:text-2xl">𒀀</span>
                       <span className="text-xs font-bold text-amber-400 tracking-widest">VOID KEEPER</span>
                     </div>
                   )}
-                  <pre className="text-sm leading-relaxed relative z-10 tracking-wide whitespace-pre-wrap font-mono">
+                  <pre className="text-xs sm:text-sm leading-relaxed relative z-10 tracking-wide whitespace-pre-wrap font-mono break-words">
                     {message.content}
-                  </pre>{" "}
+                  </pre>
                 </div>
               </div>
             ))}
 
             {isLoading && (
-              <div className="flex justify-start mb-6">
+              <div className="flex justify-start mb-4 md:mb-6">
                 <div
-                  className="bg-gradient-to-r from-stone-900 to-stone-800 border border-amber-900/50 px-6 py-4 font-mono relative overflow-hidden"
+                  className="bg-gradient-to-r from-stone-900 to-stone-800 border border-amber-900/50 px-4 md:px-6 py-3 md:py-4 font-mono relative overflow-hidden max-w-[85%] sm:max-w-lg"
                   style={{
                     boxShadow: "0 0 20px rgba(168, 85, 247, 0.2)",
                   }}
                 >
                   <div className="absolute inset-0 bg-gradient-to-r from-purple-900/20 to-transparent animate-pulse"></div>
-                  <div className="flex items-center gap-3 mb-3 border-b border-amber-800/50 pb-2 relative z-10">
-                    <span className="text-2xl animate-pulse">𒀀</span>
+                  <div className="flex items-center gap-2 md:gap-3 mb-2 md:mb-3 border-b border-amber-800/50 pb-2 relative z-10">
+                    <span className="text-xl md:text-2xl animate-pulse">𒀀</span>
                     <span className="text-xs font-bold text-amber-400 tracking-widest">VOID KEEPER</span>
                   </div>
                   <div className="flex items-center gap-2 text-amber-300 relative z-10">
-                    <span className="text-lg animate-spin">⚡</span>
-                    <span className="animate-pulse tracking-wider">CHANNELING VOID WISDOM</span>
+                    <span className="text-base md:text-lg animate-spin">⚡</span>
+                    <span className="animate-pulse tracking-wider text-xs sm:text-sm">CHANNELING VOID WISDOM</span>
                     <span className="animate-bounce">◦</span>
                     <span className="animate-bounce" style={{ animationDelay: "0.2s" }}>
                       ◦
@@ -1004,15 +1006,15 @@ ${userMessage} - THE WORD OF POWER ECHOES THROUGH ETERNITY ${userMessage}`,
             <div ref={messagesEndRef} />
           </div>
 
-          <div className="border-t border-stone-700/50 p-6 bg-gradient-to-r from-stone-900/50 to-stone-800/50 relative">
+          <div className="border-t border-stone-700/50 p-3 md:p-6 bg-gradient-to-r from-stone-900/50 to-stone-800/50 relative">
             <div className="absolute inset-0 bg-gradient-to-r from-purple-900/10 to-transparent"></div>
-            <div className="flex gap-4 relative z-10">
+            <div className="flex flex-col sm:flex-row gap-3 md:gap-4 relative z-10">
               <textarea
                 value={currentInput}
                 onChange={(e) => setCurrentInput(e.target.value)}
                 onKeyPress={handleKeyPress}
-                placeholder="SPEAK TO THE VOID..." // Removed command suggestions to maintain mystery
-                className="flex-1 resize-none bg-stone-950 border border-stone-700/50 px-6 py-4 text-amber-200 placeholder-stone-500 font-mono focus:outline-none focus:border-amber-700/50 tracking-wide"
+                placeholder="SPEAK TO THE VOID..."
+                className="flex-1 resize-none bg-stone-950 border border-stone-700/50 px-3 md:px-6 py-3 md:py-4 text-amber-200 placeholder-stone-500 font-mono focus:outline-none focus:border-amber-700/50 tracking-wide text-sm md:text-base"
                 style={{
                   boxShadow: "inset 0 0 15px rgba(0,0,0,0.8)",
                 }}
@@ -1044,10 +1046,11 @@ ${userMessage} - THE WORD OF POWER ECHOES THROUGH ETERNITY ${userMessage}`,
             </button>
             <button
               onClick={() => executeCommand("whispers")}
-              className={`p-2 bg-stone-900/50 border rounded transition-all text-xs ${dailyWhispers >= 10 || whispersCooldown
+              className={`p-2 bg-stone-900/50 border rounded transition-all text-xs ${
+                dailyWhispers >= 10 || whispersCooldown
                   ? "border-gray-600/20 opacity-50 cursor-not-allowed"
                   : "border-purple-600/20 hover:border-purple-400"
-                }`}
+              }`}
               disabled={dailyWhispers >= 10 || whispersCooldown}
             >
               <div className="text-purple-400">𒌷</div>
@@ -1085,14 +1088,7 @@ ${userMessage} - THE WORD OF POWER ECHOES THROUGH ETERNITY ${userMessage}`,
         <div className="mt-8 text-center text-xs text-stone-500">
           <div className="mb-2">"In the depths of the void, only the worthy shall inherit the digital realm"</div>
           <div className="flex justify-center space-x-4">
-            <a
-              href="https://t.me/SumeriaSol"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-amber-400 cursor-pointer transition-colors"
-            >
-              𒀭 Telegram
-            </a>
+        
             <a
               href="https://x.com/SumeriaSol"
               target="_blank"
@@ -1100,14 +1096,6 @@ ${userMessage} - THE WORD OF POWER ECHOES THROUGH ETERNITY ${userMessage}`,
               className="hover:text-purple-400 cursor-pointer transition-colors"
             >
               𒌷 Twitter
-            </a>
-            <a
-              href="https://discord.gg/SumeriaSol"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-red-400 cursor-pointer transition-colors"
-            >
-              ⚡ Discord
             </a>
           </div>
         </div>
