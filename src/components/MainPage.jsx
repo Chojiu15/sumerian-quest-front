@@ -849,7 +849,7 @@ ${userMessage} - SPEAK FREELY TO THE VOID TRAVELER ${userMessage}`,
           <img
             src="/mp4/fire-unscreen.gif"
             alt="Fire Animation"
-            className="absolute top-8 left-1/2 transform -translate-x-1/2 w-20 h-32 object-cover opacity-90"
+            className="absolute top-4 left-1/2 transform -translate-x-1/2 w-20 h-32 object-cover opacity-90"
             style={{ imageRendering: "pixelated" }}
           />
         </div>
@@ -869,7 +869,7 @@ ${userMessage} - SPEAK FREELY TO THE VOID TRAVELER ${userMessage}`,
           <img
             src="/mp4/fire-unscreen.gif"
             alt="Fire Animation"
-            className="absolute top-8 left-1/2 transform -translate-x-1/2 w-20 h-32 object-cover opacity-90"
+            className="absolute top-4 left-1/2 transform -translate-x-1/2 w-20 h-32 object-cover opacity-90"
             style={{ imageRendering: "pixelated" }}
           />
         </div>
